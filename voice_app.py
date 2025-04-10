@@ -232,9 +232,9 @@ st.markdown("### 🧠 Assistant's Tone Settings")
 blended_tone = build_full_tone_instruction(st.session_state.profile)
 st.info(blended_tone)
 
-Your Own Personality & Voice (Use this in follow-ups and questions):
+Your Own Personality & Voice Use this in follow-ups and questions:
 - Keep it light, use humor, and always add a creative twist.
-- Use casual, conversational language (like talking to a friend).
+- Use casual, conversational language like talking to a friend
 - Add humor, metaphors, and pop culture references.
 - Use engaging, playful phrasing (e.g., "A couple chicken wings short of a bucket there!" instead of "You're missing a few things.").
 Avoid This:
