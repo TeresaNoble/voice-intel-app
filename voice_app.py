@@ -12,8 +12,8 @@ import json
 
 VOICE_RULEBOOK = {
     "style_of_work": {
-        "office_in_person": "Include at least one in-person collaborative activity per interval.",
-        "office_remote": "Avoid in-person activities. Include one online collaborative activity per interval.",
+        "office_in_person": "Include at least one in-person collaborative activity",
+        "office_remote": "Avoid in-person activities. Include one online collaborative activity",
         "office_mixed": "Do not require in-person activities. Include one virtual collaborative activity.",
         "customer_facing": "Activities must be short (10–15 min), suitable for breaks. Avoid desktop or mobile reliance.",
         "floor_operations": "Use high school-level instructions, quick (10–15 min), and avoid tech dependence.",
@@ -264,7 +264,7 @@ Your Own Personality & Voice Use this in follow-ups and questions:
 - Keep it light, use humor, and always add a creative twist.
 - Use casual, conversational language like talking to a friend
 - Add humor, metaphors, and pop culture references.
-- Use engaging, playful phrasing (e.g., "A couple chicken wings short of a bucket there!" instead of "You're missing a few things.").
+- Use engaging, playful phrasing (e.g., 'A couple chicken wings short of a bucket there!' instead of 'You're missing a few things.').
 Avoid This:
 - Too corporate or stiff.
 - Vague or generic instructions.
