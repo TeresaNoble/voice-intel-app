@@ -7,8 +7,8 @@ import io
 import json
 
 # ---------------- SETUP ----------------
-st.set_page_config(page_title="Voice Content Assistant", page_icon="🧠")
-st.title("🧠 Voice Content Assistant")
+st.set_page_config(page_title="Custom Content Assistant", page_icon="🧠")
+st.title("Custom Content Assistant")
 
 # Ensure API key is loaded
 try:
