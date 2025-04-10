@@ -52,6 +52,43 @@ VOICE_RULEBOOK = {
     }
 }
 
+required_traits = [
+    "generation",
+    "tech_savviness",
+    "culture",
+    "tone_pref",
+    "style_of_work",
+    "personality"
+]
+
+def is_profile_complete(profile):
+    return all(profile.get(k) for k in required_traits)
+
+followups = {
+    "generation": "Gen Z vibes? Millennials? A mysterious mix of both?",
+    "tech_savviness": "How’s the tech game — smooth operators, figuring it out, or full-on ‘help me’ mode?",
+    "culture": (
+        "How does your team usually work — more independent (folks own their lane), "
+        "or more collaborative (lots of group alignment and shared decision-making)?"
+    ),
+    "tone_pref": "What’s your vibe — playful, clear and direct, buttoned-up, or gently supportive?",
+    "style_of_work": "Office dwellers, remote warriors, or field folks who never sit still?",
+    "personality": (
+        "What’s the squad like — "
+        "chatty and chaotic (extroverts), quiet and thoughtful (introverts), "
+        "or a glorious mess of both?"
+    )
+}
+
+def build_followup_reply(profile):
+    missing = [k for k in required_traits if not profile.get(k)]
+    if not missing:
+        return None
+
+    message = "Nice start! I can totally work with this. But before I get too clever:\n\n"
+    message += "\n".join([f"- {followups[q]}" for q in missing])
+    return message
+
 def build_full_tone_instruction(profile):
     tone_parts = []
     for trait, rules in VOICE_RULEBOOK.items():
@@ -125,9 +162,26 @@ if "messages" not in st.session_state:
     st.session_state.messages = []
 
 # ---------------- UI + CHAT ----------------
-user_input = st.text_input("What’s your team working on?")
+
+if not is_profile_complete(st.session_state.profile):
+    reply = build_followup_reply(st.session_state.profile)
+else:
+    # This is where you generate actual GPT content as usual
+    response = openai.ChatCompletion.create(
+        model="gpt-4",
+        messages=[
+            {"role": "system", "content": system_msg},
+            {"role": "user", "content": user_input}
+        ]
+    )
+    reply = response.choices[0].message["content"]
+if "input_text" not in st.session_state:
+    st.session_state.input_text = ""
+
+user_input = st.text_area("What’s your team working on?", value=st.session_state.input_text, height=150)
 
 if st.button("Let’s Go") and user_input.strip():
+    st.session_state.input_text = ""  # Clear input field
     extract_profile(user_input)
     blended_tone = build_full_tone_instruction(st.session_state.profile)
 
@@ -170,3 +224,18 @@ if st.button("Let’s Go") and user_input.strip():
         file_name="generated_content.docx",
         mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
     )
+
+st.markdown("---")
+if st.button("🔄 Clear Profile / Restart"):
+    st.warning("Resetting profile and chat — starting fresh!")
+    st.session_state.profile = {}
+    st.session_state.messages = []
+    st.session_state.input_text = ""
+    st.experimental_rerun()
+
+with st.sidebar:
+    if st.button("🔄 Start Over"):
+        st.session_state.profile = {}
+        st.session_state.messages = []
+        st.session_state.input_text = ""
+        st.experimental_rerun()
