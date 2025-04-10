@@ -229,7 +229,8 @@ Speak like this for all responses. Adapt as new user info comes in.
 """
 
 st.markdown("### 🧠 Assistant's Tone Settings")
-st.info blended_tone = build_full_tone_instruction(st.session_state.profile)
+blended_tone = build_full_tone_instruction(st.session_state.profile)
+st.info(blended_tone)
 
 Your Own Personality & Voice (Use this in follow-ups and questions):
 - Keep it light, use humor, and always add a creative twist.
