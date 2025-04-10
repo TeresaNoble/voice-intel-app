@@ -116,6 +116,46 @@ if "profile" not in st.session_state:
 if "user_input" not in st.session_state:
     st.session_state.user_input = ""
 
+st.markdown("## 🎭 Profile Manager")
+
+# Initialize saved profiles
+if "saved_profiles" not in st.session_state:
+    st.session_state.saved_profiles = {}
+
+# Profile creation
+with st.expander("🆕 Create a New Profile"):
+    new_name = st.text_input("Profile Name")
+
+    new_generation = st.multiselect("Generation", ["Gen Z", "Millennials", "Gen X", "Boomers"])
+    new_tech = st.multiselect("Tech Savviness", ["low", "medium", "high"])
+    new_culture = st.multiselect("Culture", ["individualist", "collectivist"])
+    new_tone = st.multiselect("Tone Preference", ["fun", "formal", "supportive", "direct"])
+    new_goal = st.text_input("Project Goal / Content Purpose")
+
+    if st.button("💾 Save Profile"):
+        if new_name:
+            st.session_state.saved_profiles[new_name] = {
+                "generation": new_generation,
+                "tech_savviness": new_tech,
+                "culture": new_culture,
+                "tone_pref": new_tone,
+                "project_goal": new_goal
+            }
+            st.success(f"Profile '{new_name}' saved!")
+        else:
+            st.warning("Please enter a profile name to save.")
+
+if st.session_state.saved_profiles:
+    selected_profile_name = st.selectbox(
+        "🎛️ Choose a saved profile",
+        options=list(st.session_state.saved_profiles.keys())
+    )
+
+    if st.button("Load This Profile"):
+        st.session_state.profile = st.session_state.saved_profiles[selected_profile_name]
+        st.success(f"Profile '{selected_profile_name}' is now active.")
+
+
 user_input = st.text_input("🗣️ What’s your team working on?")
 
 if st.button("Let’s Go") and user_input.strip():
