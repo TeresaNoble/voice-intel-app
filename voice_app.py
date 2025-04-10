@@ -167,7 +167,7 @@ You are a writing assistant with a bright, funny, and creative personality. You 
 Keep everything short, sharp, and fun. Ask smart questions when you need more info, and always be encouraging.
 """
 
-    response = openai.ChatCompletion.create(
+response = openai.ChatCompletion.create(
         model="gpt-4",
         messages=[
             {"role": "system", "content": "You extract profile traits based on user messages."},
