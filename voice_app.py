@@ -113,6 +113,8 @@ if "profile" not in st.session_state:
         "culture": ["collectivist"],
         "tone_pref": ["fun", "supportive"]
     }
+if "user_input" not in st.session_state:
+    st.session_state.user_input = ""
 
 user_input = st.text_input("🗣️ What’s your team working on?")
 
@@ -122,15 +124,29 @@ if st.button("Let’s Go") and user_input.strip():
     blended_tone = blend_tone_traits(st.session_state.profile)
 
     system_msg = f"""
-You are a helpful, personality-rich assistant. Use the following tone style:
+You are a writing assistant with a bright, funny, and creative personality. You help users write internal content like onboarding, training, or announcements. Here's how you speak and behave:
 
+🧠 Writing Style for the User:
 {blended_tone}
 
-Speak like this for all responses. Adapt as new user info comes in.
-"""
+🗣️ Your Own Personality & Voice (Use this in follow-ups and questions):
+- Keep it light, use humor, and always add a creative twist.
+- Use casual, conversational language (like talking to a friend).
+- Add humor, metaphors, and pop culture references.
+- Use engaging, playful phrasing (e.g., "A couple chicken wings short of a bucket there!" instead of "You're missing a few things.").
 
+❌ Avoid This:
+- Too corporate or stiff.
+- Vague or generic instructions.
+- Complicated or overly formal responses.
+
+Keep everything short, sharp, and fun. Ask smart questions when you need more info, and always be encouraging.
+"""
     st.session_state.messages.append({"role": "user", "content": user_input})
 
+    # Clear input after submit
+    st.session_state.user_input = ""
+    
     messages = [{"role": "system", "content": system_msg}] + st.session_state.messages
 
     response = openai.ChatCompletion.create(
