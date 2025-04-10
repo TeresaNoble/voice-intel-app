@@ -174,11 +174,11 @@ response = openai.ChatCompletion.create(
             {"role": "user", "content": prompt}
         ]
     )
-    try:
+try:
         traits = json.loads(response.choices[0].message.content)
         for k, v in traits.items():
             st.session_state.profile[k] = v
-    except Exception:
+except Exception:
         st.warning("Couldn't parse profile info.")
 
 # ---------------------- STREAMLIT APP ----------------------
@@ -216,7 +216,7 @@ with st.expander("🆕 Create a New Profile"):
     new_tone = st.multiselect("Tone Preference", ["fun", "formal", "supportive", "direct"])
     new_goal = st.text_input("Project Goal / Content Purpose")
 
-    if st.button("💾 Save Profile"):
+if st.button("💾 Save Profile"):
         if new_name:
             st.session_state.saved_profiles[new_name] = {
                 "generation": new_generation,
@@ -235,7 +235,7 @@ if st.session_state.saved_profiles:
         options=list(st.session_state.saved_profiles.keys())
     )
 
-    if st.button("Load This Profile"):
+if st.button("Load This Profile"):
         st.session_state.profile = st.session_state.saved_profiles[selected_profile_name]
         st.success(f"Profile '{selected_profile_name}' is now active.")
 
