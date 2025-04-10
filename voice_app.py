@@ -6,7 +6,8 @@ from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 import io
 import json
 
-# 1. TONE GUIDES
+# ---------------------- TONE GUIDES ----------------------
+
 TONE_GUIDES = {
     "generation": {
         "Gen Z": "Use fast, emoji-rich, punchy language.",
@@ -31,20 +32,20 @@ TONE_GUIDES = {
     }
 }
 
-# 2. TONE BLENDER
+# ---------------------- FUNCTIONS ----------------------
+
 def blend_tone_traits(profile):
     tone_parts = []
-    for trait, trait_rules in TONE_GUIDES.items():
+    for trait, rules in TONE_GUIDES.items():
         values = profile.get(trait, [])
         if isinstance(values, str):
             values = [values]
         for value in values:
-            tone = trait_rules.get(value)
+            tone = rules.get(value)
             if tone:
                 tone_parts.append(tone)
     return " ".join(tone_parts)
 
-# 3. WORD EXPORT
 def generate_word_file(profile_data, ai_output):
     doc = Document()
     title = doc.add_heading("GENERATED CONTENT 📄", level=0)
@@ -55,13 +56,11 @@ def generate_word_file(profile_data, ai_output):
         run = para_label.add_run(label)
         run.bold = True
         run.font.size = Pt(12)
-        para_content = doc.add_paragraph(str(content))
-        para_content.paragraph_format.space_after = Pt(12)
+        doc.add_paragraph(str(content))
 
-    if "company_name" in profile_data:
-        add_section("Company Name:", profile_data["company_name"])
-    if "content_type" in profile_data:
-        add_section("Content Description:", profile_data["content_type"])
+    for k, v in profile_data.items():
+        add_section(k.replace("_", " ").title() + ":", v)
+
     add_section("AI Output:", ai_output)
 
     buffer = io.BytesIO()
@@ -69,75 +68,99 @@ def generate_word_file(profile_data, ai_output):
     buffer.seek(0)
     return buffer
 
-# 4. INIT
-openai.api_key = st.secrets["OPENAI_API_KEY"]
-st.set_page_config(page_title="Custom Content Assistant")
-st.title("🧠 Custom Content Assistant")
+def extract_profile(user_message):
+    prompt = f"""
+The user said: "{user_message}"
 
-# 5. PROFILE
+Based on this, infer and update the following profile traits:
+generation, tech_savviness, culture, tone_pref, team_type, project_goal
+
+Use only these labels:
+generation: ["Gen Z", "Millennials", "Gen X", "Boomers"]
+tech_savviness: ["low", "medium", "high"]
+culture: ["individualist", "collectivist"]
+tone_pref: ["fun", "formal", "supportive", "direct"]
+
+Return only JSON.
+"""
+    response = openai.ChatCompletion.create(
+        model="gpt-4",
+        messages=[
+            {"role": "system", "content": "You extract profile traits based on user messages."},
+            {"role": "user", "content": prompt}
+        ]
+    )
+    try:
+        traits = json.loads(response.choices[0].message.content)
+        for k, v in traits.items():
+            st.session_state.profile[k] = v
+    except Exception:
+        st.warning("Couldn't parse profile info.")
+
+# ---------------------- STREAMLIT APP ----------------------
+
+openai.api_key = st.secrets["OPENAI_API_KEY"]
+st.set_page_config(page_title="Voice Content Assistant")
+st.title("🧠 Voice-Driven Content Assistant")
+
+if "messages" not in st.session_state:
+    st.session_state.messages = []
+
 if "profile" not in st.session_state:
     st.session_state.profile = {
-        "generation": ["Gen X", "Boomers"],
-        "tech_savviness": ["low", "high"],
+        "generation": ["Gen X"],
+        "tech_savviness": ["medium"],
         "culture": ["collectivist"],
         "tone_pref": ["fun", "supportive"]
     }
 
-# 6. UI
-user_input = st.text_area("Hey! What’s your team working on? Need help writing something?")
-generate = st.button("Let’s Go")
+user_input = st.text_input("🗣️ What’s your team working on?")
 
-if generate and user_input.strip():
-    with st.spinner("Doing some clever thinking... 🤖"):
-        # 7. Tone + GPT
-        blended_tone = blend_tone_traits(st.session_state.profile)
+if st.button("Let’s Go") and user_input.strip():
+    extract_profile(user_input)  # 🔍 Update user profile
 
-        system_msg = f"""
-You are a content assistant. Use the following tone style, blended from the user's traits:
+    blended_tone = blend_tone_traits(st.session_state.profile)
+
+    system_msg = f"""
+You are a helpful, personality-rich assistant. Use the following tone style:
 
 {blended_tone}
 
-The user may represent a mixture of backgrounds or preferences.
-Always prioritize clarity, warmth, and a voice that adapts to the described audience.
-Ask for clarification if the tone is unclear or inconsistent.
+Speak like this for all responses. Adapt as new user info comes in.
 """
 
-        response = openai.ChatCompletion.create(
-            model="gpt-4",
-            messages=[
-                {"role": "system", "content": system_msg},
-                {"role": "user", "content": user_input}
-            ]
-        )
+    st.session_state.messages.append({"role": "user", "content": user_input})
 
-        reply = response.choices[0].message["content"]
+    messages = [{"role": "system", "content": system_msg}] + st.session_state.messages
 
-        # 8. Display response
-        st.markdown("### ✨ Here’s what I think:")
-        st.write(reply)
+    response = openai.ChatCompletion.create(
+        model="gpt-4",
+        messages=messages
+    )
 
-        # 9. Copy-friendly display
-        st.code(reply, language="markdown")
+    reply = response.choices[0].message.content
+    st.session_state.messages.append({"role": "assistant", "content": reply})
 
-        # 10. Word export
-        export_data = {
-            "Team Type": st.session_state.profile.get("team_type", "N/A"),
-            "Tone Preference": st.session_state.profile.get("tone_pref", "N/A"),
-            "Content Type": st.session_state.profile.get("content_type", "N/A"),
-            "AI Output": reply
-        }
+# ---------------------- UI DISPLAY ----------------------
 
-        word_file = generate_word_file(export_data)
-        st.download_button(
-            label="📄 Export as Word Doc",
-            data=word_file,
-            file_name="content_output.docx",
-            mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-        )
+if st.session_state.messages:
+    st.markdown("### 💬 Conversation")
+    for msg in st.session_state.messages:
+        speaker = "👤 You" if msg["role"] == "user" else "🤖 Assistant"
+        st.markdown(f"**{speaker}:** {msg['content']}")
 
-        # 11. Tone preview
-        st.markdown("### 🧠 Current Blended Tone")
-        st.info(blended_tone)
+    # ✂️ Copy
+    st.code(st.session_state.messages[-1]["content"], language="markdown")
 
-elif generate:
-    st.warning("Please enter something before hitting Go 🐶")
+    # 📄 Export
+    word_file = generate_word_file(st.session_state.profile, st.session_state.messages[-1]["content"])
+    st.download_button(
+        label="📄 Export as Word Doc",
+        data=word_file,
+        file_name="generated_content.docx",
+        mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    )
+
+    # 🧠 Tone used
+    st.markdown("### 🧠 Tone Guide Used")
+    st.info(blend_tone_traits(st.session_state.profile))
