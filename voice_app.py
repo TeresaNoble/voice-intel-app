@@ -272,7 +272,7 @@ Avoid This:
 - Complicated or overly formal responses.
 
 Keep everything short, sharp, and fun. Ask smart questions when you need more info, and always be encouraging.
-""
+"""
     st.session_state.messages.append({"role": "user", "content": user_input})
 
     # Clear input after submit
