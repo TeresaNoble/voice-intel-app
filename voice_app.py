@@ -17,6 +17,14 @@ except Exception as e:
     st.error("OpenAI key missing or invalid.")
     st.stop()
 
+# --- SESSION SETUP ---
+if "input_text" not in st.session_state:
+    st.session_state.input_text = ""
+if "profile" not in st.session_state:
+    st.session_state.profile = {}
+if "messages" not in st.session_state:
+    st.session_state.messages = []
+
 # ---------------- RULEBOOK ----------------
 VOICE_RULEBOOK = {
     "style_of_work": {
@@ -225,17 +233,9 @@ if st.button("Let’s Go") and user_input.strip():
         mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
     )
 
-st.markdown("---")
 if st.button("🔄 Clear Profile / Restart"):
     st.warning("Resetting profile and chat — starting fresh!")
+    st.session_state.input_text = ""
     st.session_state.profile = {}
     st.session_state.messages = []
-    st.session_state.input_text = ""
     st.experimental_rerun()
-
-with st.sidebar:
-    if st.button("🔄 Start Over"):
-        st.session_state.profile = {}
-        st.session_state.messages = []
-        st.session_state.input_text = ""
-        st.experimental_rerun()
