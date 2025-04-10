@@ -117,3 +117,27 @@ Ask for clarification if the tone is unclear or inconsistent.
         st.write(reply)
 
         # 9. Copy-friendly display
+        st.code(reply, language="markdown")
+
+        # 10. Word export
+        export_data = {
+            "Team Type": st.session_state.profile.get("team_type", "N/A"),
+            "Tone Preference": st.session_state.profile.get("tone_pref", "N/A"),
+            "Content Type": st.session_state.profile.get("content_type", "N/A"),
+            "AI Output": reply
+        }
+
+        word_file = generate_word_file(export_data)
+        st.download_button(
+            label="📄 Export as Word Doc",
+            data=word_file,
+            file_name="content_output.docx",
+            mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        )
+
+        # 11. Tone preview
+        st.markdown("### 🧠 Current Blended Tone")
+        st.info(blended_tone)
+
+elif generate:
+    st.warning("Please enter something before hitting Go 🐶")
