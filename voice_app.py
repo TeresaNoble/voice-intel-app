@@ -21,7 +21,7 @@ Your job is to read the user's input and reply with a short message that:
 - Uses casual, playful language (but still clear)
 """
 
-            response = openai.Chat.Completion.create(
+            response = openai.ChatCompletion.create(
                 model="gpt-4",
                 messages=[
                     {"role": "system", "content": system_msg},
