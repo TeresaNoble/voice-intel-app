@@ -131,7 +131,7 @@ def extract_profile(user_message):
         ]
     )
     try:
-        traits = json.loads(response.choices[0].message.content)
+        traits = json.loads(response['choices'][0]['message']['content'])
         for k, v in traits.items():
             st.session_state.profile[k] = v
     except Exception:
