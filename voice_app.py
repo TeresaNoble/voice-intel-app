@@ -9,40 +9,40 @@ client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 VOICE_PROFILE = {
     "generation": {
         "Gen Alpha": "Intuitive, play-driven with instant feedback loops",
-        "Gen Z": "Fast-paced visual storytelling with meme fluency",
-        "Younger Millennials": "Collaborative gamified systems",
-        "Older Millennials": "Blend analog/digital with stability focus",
-        "Gen X": "Pragmatic results-oriented approach",
-        "Boomers": "Structured legacy-focused communication"
+        "Gen Z": "Fast-paced, visual, and inclusive. Prioritize authenticity, creativity, and meme fluency.",
+        "Younger Millennials": "Digital-first, collaborative, and socially-conscious. Enjoy gamified interaction and fluid systems",
+        "Older Millennials": "Blend of analog and digital mindsets. Prefer feedback, stability, and meaningful contribution.",
+        "Gen X": "Independent, pragmatic, and flexible. Value balance, directness, and results",
+        "Boomers": "Structured, respectful, and security-driven. Value legacy, reliability, and recognition"
     },
     "tone": {
-        "Fun": "Playful metaphors and informal language",
-        "Formal": "Professional precise terminology",
-        "Supportive": "Warm empathetic reassurance",
-        "Direct": "Clear outcome-focused brevity"
+        "Fun": "Light-hearted, metaphor-driven, playful, and informal",
+        "Formal": "Polished, respectful, professional, and precise",
+        "Supportive": "Warm, empathetic, and reassuring, with an emphasis on emotional safety",
+        "Direct": "Clear, brief, assertive, and focused on outcomes"
     },
     "work_style": {
-        "Practical": "Step-by-step bullet points",
-        "Analytical": "Logical structured analysis",
-        "Creative": "Metaphorical storytelling",
-        "Interpersonal": "People-centered examples",
-        "Entrepreneurial": "Visionary disruptive framing"
+        "Practical": "Step-by-step instructions, bullet-point formats, minimal fluff.",
+        "Analytical": "Logical, structured content with room for reasoning and analysis",
+        "Creative": "Story-driven and visually expressive language",
+        "Interpersonal": "Relational tone, people-centered examples, and client-focus.",
+        "Entrepreneurial": "Visionary, disruptive, and forward-thinking framing with challenges"
     },
     "tech_level": {
-        "Low": "Plain language with visual guides",
-        "Medium": "Conversational tech terms",
-        "High": "Technical optimization focus"
+        "Low": "Plain language, minimal jargon, detailed tutorials with visual aids.",
+        "Medium": "Conversational technical terms with intermediate guidance.",
+        "High": "Fluent technical language with emphasis on optimization and customization."
     },
     "personality": {
-        "Extrovert": "Group-oriented conversational",
-        "Introvert": "Solo-focused reflective",
-        "Mixed": "Balanced collaboration"
+        "Extrovert": "Conversational, group-oriented with active engagement and verbal elements",
+        "Introvert": "Reflective, written, and structured around solo engagement.",
+        "Mixed": "Blends written reflection with moments of collaborative interaction"
     },
     "culture": {
-        "Hierarchical": "Formal role definitions",
-        "Collaborative": "Team-oriented language",
-        "Individual": "Personal achievement focus",
-        "Group": "Collective success emphasis"
+        "Hierarchical": "Respect structure and authority. Use formal tone and clearly define roles.",
+        "Collaborative": "Flatten hierarchies, use casual tone, and emphasize teamwork",
+        "Individual": "Highlight personal goals, independence, and self-driven growth",
+        "Group": "Emphasize shared success, group cohesion, and support for others"
     }
 }
 
