@@ -36,13 +36,6 @@ VOICE_RULEBOOK = {
         "introvert": "Focus on solo reflection, writing, or quiet 1:1 conversation.",
         "mixed": "Balance solo and collaborative activities evenly."
     },
-    "player_type": {
-        "killers": "Include competitive tasks against others or personal bests.",
-        "achievers": "Include goal-based tasks and achievement tracking, like badges or social sharing.",
-        "explorers": "Include ideation, open-ended problem-solving, or research tasks.",
-        "socialisers": "Include activities focused on teamwork, customer stories, and social connections.",
-        "default": "Weight activity types as 80% social, 10% explorer, 10% achiever, 1% killer."
-    },
     "worker_style": {
         "practical": "Use short, concise bullet-point or numbered step instructions.",
         "analytical": "Be detailed, logical, and include structured thinking tasks.",
@@ -69,7 +62,7 @@ VOICE_RULEBOOK = {
         "indulgence": "Make tone playful, joyful, and rewarding.",
         "restraint": "Be respectful, restrained, and norm-conscious."
     }
-    }
+}
 
 
 def build_full_tone_instruction(profile):
@@ -171,7 +164,6 @@ if user_input:
 
     if not is_profile_complete(st.session_state.profile):
         extract_profile(user_input)
-        missing_traits = [k for k in VOICE_RULEBOOK if not st.session_state.profile.get(k)]
         followups = {
             "generation": "Gen Z vibes? Millennials? A mysterious mix of both?",
             "tech_savviness": "How’s the tech game — smooth operators, figuring it out, or full-on ‘help me’ mode?",
@@ -180,6 +172,7 @@ if user_input:
             "place_of_work": "Office-based, remote crew, or in-the-field types?",
             "personality": "Big energy extroverts, thoughtful introverts, or both?"
         }
+        missing_traits = [k for k in VOICE_RULEBOOK if not st.session_state.profile.get(k)]
         reply = "Nice! Tell me a bit more so I can match your tone better:\n\n"
         reply += "\n".join([f"- {followups[trait]}" for trait in missing_traits])
         st.session_state.messages.append({"role": "assistant", "content": reply})
