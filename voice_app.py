@@ -1,6 +1,6 @@
-import openai
+import OpenAI
 import streamlit as st
-from openai import OpenAI
+from OpenAI import OpenAI
 from docx import Document
 from docx.shared import Pt
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
