@@ -63,7 +63,7 @@ def get_sidebar_profile():
             "work_style": st.selectbox("Work Approach", list(VOICE_PROFILE["work_style"].keys())),
             "tech_level": st.selectbox("Tech Comfort", list(VOICE_PROFILE["tech_level"].keys())),
             "personality": st.radio("Team Personality", list(VOICE_PROFILE["personality"].keys())),
-            "culture": st.selectbox("Org Culture", list(VOICE_PROFILE["culture"].keys()))
+            "culture": st.selectbox("Org Culture", list(VOICE_PROFILE["culture"].keys())),
             "length": st.radio("Content Length", 
                              ["Short", "Medium", "Long"],
                              index=1)  # Default to Medium
