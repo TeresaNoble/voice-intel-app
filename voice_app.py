@@ -8,10 +8,22 @@ import json
 
 openai.api_key = st.secrets["OPENAI_API_KEY"]
 
-# ---------------------- TONE GUIDES ----------------------
-
+# ---------------------- VOICE RULEBOOK ----------------------
 VOICE_RULEBOOK = {
-    "style_of_work": {
+    "generation": {
+        "boomers": "Keep things straightforward, structured, and focused on job security and recognition.",
+        "gen_x": "Focus on practical results, work-life balance, and flexible structure.",
+        "millennials": "Include gamified elements, feedback loops, and social interaction.",
+        "gen_z": "Expect fast, seamless, visual delivery. Be inclusive, creative, and interactive.",
+        "gen_alpha": "Make things intuitive, visual, and reward creativity and play."
+    },
+    "tone_pref": {
+        "fun": "Use humor, metaphors, and light tone.",
+        "formal": "Stick to polished, professional language.",
+        "supportive": "Be warm and empathetic.",
+        "direct": "Be brief, clear, and assertive."
+    },
+    "place_of_work": {
         "office_in_person": "Include at least one in-person collaborative activity per interval.",
         "office_remote": "Avoid in-person activities. Include one online collaborative activity per interval.",
         "office_mixed": "Do not require in-person activities. Include one virtual collaborative activity.",
@@ -43,13 +55,6 @@ VOICE_RULEBOOK = {
         "medium": "Use familiar tech terms. Include some intermediate tips.",
         "high": "Use technical terms fluently. Provide advanced customization options."
     },
-    "generation": {
-        "boomers": "Keep things straightforward, structured, and focused on job security and recognition.",
-        "gen_x": "Focus on practical results, work-life balance, and flexible structure.",
-        "millennials": "Include gamified elements, feedback loops, and social interaction.",
-        "gen_z": "Expect fast, seamless, visual delivery. Be inclusive, creative, and interactive.",
-        "gen_alpha": "Make things intuitive, visual, and reward creativity and play."
-    },
     "hofstede": {
         "high_power_distance": "Maintain clear roles and hierarchy in tone.",
         "low_power_distance": "Use a collaborative tone. Flatten hierarchy.",
@@ -64,7 +69,7 @@ VOICE_RULEBOOK = {
         "indulgence": "Make tone playful, joyful, and rewarding.",
         "restraint": "Be respectful, restrained, and norm-conscious."
     }
-}
+    }
 
 def build_full_tone_instruction(profile):
     tone_parts = []
@@ -83,7 +88,7 @@ def build_full_tone_instruction(profile):
 
 def generate_word_file(profile_data, ai_output):
     doc = Document()
-    title = doc.add_heading("GENERATED CONTENT 📄", level=0)
+    title = doc.add_heading("GENERATED CONTENT", level=0)
     title.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
 
     def add_section(label, content):
@@ -103,25 +108,31 @@ def generate_word_file(profile_data, ai_output):
     buffer.seek(0)
     return buffer
 
+def is_profile_complete(profile):
+    required_fields = ["generation", "tech_savviness", "culture", "tone_pref", "place_of_work", "personality"]
+    return all(profile.get(field) for field in required_fields)
+
 def extract_profile(user_message):
     prompt = f"""
     The user said: "{user_message}"
 
     Based on this, infer and update the following profile traits:
-    generation, tech_savviness, culture, tone_pref, team_type, project_goal
+    generation, tech_savviness, culture, tone_pref, place_of_work, personality
 
-    Use only these labels:
+    Use these labels:
     generation: ["Gen Z", "Millennials", "Gen X", "Boomers"]
     tech_savviness: ["low", "medium", "high"]
     culture: ["individualist", "collectivist"]
     tone_pref: ["fun", "formal", "supportive", "direct"]
+    place_of_work: ["office_in_person", "office_remote", "office_mixed", "customer_facing", "floor_operations", "field_worker"]
+    personality: ["extrovert", "introvert", "mixed"]
 
     Return only JSON.
     """
-    response = client.chat.completions.create(
+    response = openai.chat.completions.create(
         model="gpt-4",
         messages=[
-            {"role": "system", "content": "Extract profile traits based on user messages."},
+            {"role": "system", "content": "Extract profile traits from the user message."},
             {"role": "user", "content": prompt}
         ]
     )
@@ -134,50 +145,69 @@ def extract_profile(user_message):
 
 # ---------------------- STREAMLIT APP ----------------------
 
-st.set_page_config(page_title="Voice Content Assistant")
-st.title("Voice Content Assistant")
+openai.api_key = st.secrets["OPENAI_API_KEY"]
+st.set_page_config(page_title="Custom Content Assistant", layout="centered")
 
 if "messages" not in st.session_state:
     st.session_state.messages = []
-
 if "profile" not in st.session_state:
-    st.session_state.profile = {
-        "generation": "Gen X",
-        "tech_savviness": "medium",
-        "culture": "collectivist",
-        "tone_pref": "fun"
-    }
+    st.session_state.profile = {}
 
-user_input = st.text_input("🗣️ What’s your team working on?")
-if st.button("Let’s Go") and user_input.strip():
-    extract_profile(user_input)
-    blended_tone = build_full_tone_instruction(st.session_state.profile)
+st.title("Custom Content Assistant")
 
-    system_msg = f"""
-    You are a writing assistant with a bright, funny, and creative personality. You help users write internal content like onboarding, training, or announcements.
+with st.sidebar:
+    st.header("Profile")
+    st.write(st.session_state.profile)
+    if st.button("Clear Profile & Chat"):
+        st.session_state.profile = {}
+        st.session_state.messages = []
+        st.rerun()
 
-    Tone Based on User Profile:
-    {blended_tone}
-    """
-    st.session_state.messages.append({"role": "system", "content": system_msg})
+user_input = st.chat_input("Type your message here...")
+
+if user_input:
     st.session_state.messages.append({"role": "user", "content": user_input})
 
-    response = client.chat.completions.create(
-        model="gpt-4",
-        messages=st.session_state.messages
-    )
-    reply = response.choices[0].message.content
-    st.session_state.messages.append({"role": "assistant", "content": reply})
+    if not is_profile_complete(st.session_state.profile):
+        extract_profile(user_input)
+        missing_traits = [k for k in VOICE_RULEBOOK if not st.session_state.profile.get(k)]
+        followups = {
+            "generation": "Gen Z vibes? Millennials? A mysterious mix of both?",
+            "tech_savviness": "How’s the tech game — smooth operators, figuring it out, or full-on ‘help me’ mode?",
+            "culture": "More independent? Or team-first decision making?",
+            "tone_pref": "Playful, clear and direct, buttoned-up, or gently supportive?",
+            "place_of_work": "Office-based, remote crew, or in-the-field types?",
+            "personality": "Big energy extroverts, thoughtful introverts, or both?"
+        }
+        reply = "Nice! Tell me a bit more so I can match your tone better:\n\n"
+        reply += "\n".join([f"- {followups[trait]}" for trait in missing_traits])
+        st.session_state.messages.append({"role": "assistant", "content": reply})
+    else:
+        tone_instructions = build_full_tone_instruction(st.session_state.profile)
+        system_msg = (
+            f"You are a helpful, witty writing assistant.\n"
+            f"Tone instructions based on the user:\n{tone_instructions}\n"
+            f"Keep it light, use humor, and always add a creative twist. Use casual, conversational language (like talking to a friend). Add humor, metaphors, and pop culture references. Avoid dry, formal language. Instructions should be fun but clear. Keep it short and easy to understand.\n"
+            f"Use engaging, playful phrasing (e.g., 'A couple chicken wings short of a bucket there!' "
+            f"instead of 'Just missing a few quick things to make sure the tone fits.')"
+        )
+        st.session_state.messages.insert(0, {"role": "system", "content": system_msg})
+        response = openai.chat.completions.create(
+            model="gpt-4",
+            messages=st.session_state.messages
+        )
+        reply = response.choices[0].message.content
+        st.session_state.messages.append({"role": "assistant", "content": reply})
 
-    st.markdown("### 💬 Conversation")
-    for msg in st.session_state.messages:
-        speaker = "👤 You" if msg["role"] == "user" else "🤖 Assistant"
-        st.markdown(f"**{speaker}:** {msg['content']}")
+for msg in st.session_state.messages:
+    with st.chat_message(msg["role"]):
+        st.markdown(msg["content"])
 
-    word_file = generate_word_file(st.session_state.profile, st.session_state.messages[-1]["content"])
+if st.session_state.messages:
+    doc = generate_word_file(st.session_state.profile, st.session_state.messages[-1]["content"])
     st.download_button(
-        label="📄 Export as Word Doc",
-        data=word_file,
-        file_name="generated_content.docx",
+        label="📄 Download Word Doc",
+        data=doc,
+        file_name="content_output.docx",
         mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
     )
