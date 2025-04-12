@@ -104,23 +104,24 @@ def generate_word_file(profile_data, ai_output):
     return buffer
 
 def is_profile_complete(profile):
-    required_fields = ["generation", "tech_savviness", "hofstede_culture", "tone_pref", "place_of_work", "personality"]
+    required_fields = ["generation", "tech_savviness", "hofstede_culture", "tone_pref", "place_of_work", "personality", "worker_style"]
     return all(profile.get(field) for field in required_fields)
 
 def extract_profile(user_message):
     prompt = f"""
     The user said: "{user_message}"
 
-    Based on this, infer and update the following profile traits:
-    generation, tech_savviness, culture, tone_pref, place_of_work, personality
+    Infer and update these profile traits:
+    generation, tech_savviness, hofstede_culture, tone_pref, place_of_work, personality, worker_style
 
     Use these labels:
     generation: ["Gen Z", "Millennials", "Gen X", "Boomers"]
     tech_savviness: ["low", "medium", "high"]
-    culture: ["individualist", "collectivist"]
+    hofstede_culture: ["individualist", "collectivist"]
     tone_pref: ["fun", "formal", "supportive", "direct"]
     place_of_work: ["office_in_person", "office_remote", "office_mixed", "customer_facing", "floor_operations", "field_worker"]
     personality: ["extrovert", "introvert", "mixed"]
+    worker_style: ["practical", "analytical", "creative", "interpersonal", "entrepreneurial"]
 
     Return only JSON.
     """
@@ -136,7 +137,7 @@ def extract_profile(user_message):
         for k, v in traits.items():
             st.session_state.profile[k] = v
     except Exception:
-        st.warning("Couldn't parse profile info.")
+        st.warning("Couldn't create profile info.")
 
 # ---------------------- STREAMLIT APP ----------------------
 st.set_page_config(page_title="Custom Content Assistant", layout="centered")
@@ -172,7 +173,16 @@ if user_input:
             "personality": "Big energy extroverts, thoughtful introverts, or both?",
             "worker_style": "Practical, analytical, creative, interpersonal, or entrepreneurial?",
         }
-        missing_traits = [k for k in VOICE_RULEBOOK if not st.session_state.profile.get(k)]
+        required_fields = [
+            "generation", 
+            "tech_savviness", 
+            "hofstede_culture", 
+            "tone_pref", 
+            "place_of_work", 
+            "personality",
+            "worker_style"
+        ]    
+        missing_traits = [k for k in required_fields if not st.session_state.profile.get(k)]
         reply = "Nice! Tell me a bit more so I can match your tone better:\n\n"
         reply += "\n".join([f"- {followups[trait]}" for trait in missing_traits])
         st.session_state.messages.append({"role": "assistant", "content": reply})
