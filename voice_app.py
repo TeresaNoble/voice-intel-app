@@ -57,7 +57,7 @@ def build_full_tone_instruction(profile):
             tone_rule = rules.get(trait_value.lower().replace(" ", "_"))
             if tone_rule:
                 tone_parts.append(tone_rule)
-    return "\\n".join(tone_parts)
+    return "\n".join(tone_parts)
 
 def generate_word_file(profile_data, ai_output):
     doc = Document()
@@ -86,7 +86,7 @@ def is_profile_complete(profile):
     return all(profile.get(field) for field in required_fields)
 
 def extract_profile(user_message):
-    prompt = f\"\"\"
+    prompt = f"""
     The user said: "{user_message}"
 
     Based on this, infer and update the following profile traits:
@@ -101,7 +101,7 @@ def extract_profile(user_message):
     personality: ["extrovert", "introvert", "mixed"]
 
     Return only JSON.
-    \"\"\"
+    """
     response = openai.chat.completions.create(
         model="gpt-4",
         messages=[
@@ -152,11 +152,12 @@ if user_input:
             "style_of_work": "Office-based, remote crew, or in-the-field types?",
             "personality": "Big energy extroverts, thoughtful introverts, or both?"
         }
-        reply = "Nice! Tell me a bit more so I can match your tone better:\\n\\n"
-        reply += "\\n".join([f"- {followups[trait]}" for trait in missing_traits])
+        reply = "Nice! Tell me a bit more so I can match your tone better:\n\n"
+        reply += "\n".join([f"- {followups[trait]}" for trait in missing_traits])
+        st.session_state.messages.append({"role": "assistant", "content": reply})
     else:
         tone_instructions = build_full_tone_instruction(st.session_state.profile)
-        system_msg = f"You are a helpful, witty writing assistant.\\nTone instructions based on the user:\\n{tone_instructions}\\nBe clever, casual, and helpful."
+        system_msg = f"You are a helpful, witty writing assistant.\nTone instructions based on the user:\n{tone_instructions}\nBe clever, casual, and helpful."
         st.session_state.messages.insert(0, {"role": "system", "content": system_msg})
         response = openai.chat.completions.create(
             model="gpt-4",
@@ -177,7 +178,3 @@ if st.session_state.messages:
         file_name="content_output.docx",
         mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
     )
-'''
-
-Path("/mnt/data/voice_app.py").write_text(app_code)
-"/mnt/data/voice_app.py"
