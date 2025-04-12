@@ -43,6 +43,12 @@ VOICE_PROFILE = {
         "Collaborative": "Flatten hierarchies, use casual tone, and emphasize teamwork",
         "Individual": "Highlight personal goals, independence, and self-driven growth",
         "Group": "Emphasize shared success, group cohesion, and support for others"
+    },
+    "length": {
+    "Short": "Keep content under 100 words",
+    "Medium": "100-200 word range",
+    "Long": "200-500 word detailed content"
+
     }
 }
 
@@ -58,15 +64,21 @@ def get_sidebar_profile():
             "tech_level": st.selectbox("Tech Comfort", list(VOICE_PROFILE["tech_level"].keys())),
             "personality": st.radio("Team Personality", list(VOICE_PROFILE["personality"].keys())),
             "culture": st.selectbox("Org Culture", list(VOICE_PROFILE["culture"].keys()))
+            "length": st.radio("Content Length", 
+                             ["Short", "Medium", "Long"],
+                             index=1)  # Default to Medium
+        }
         }
 
 def validate_profile(profile):
     """Ensure all profile fields are selected"""
     missing = []
-    for field in VOICE_PROFILE.keys():
+    required_fields = list(VOICE_PROFILE.keys()) + ["length"]
+    for field in required_fields:
         if not profile.get(field):
             missing.append(f"Please select {field.replace('_', ' ').title()}")
     return missing
+
 
 # ---------------------- CORE ENGINE ----------------------
 def build_hidden_instructions(profile):
@@ -79,6 +91,7 @@ def build_hidden_instructions(profile):
         f"Tech Level: {VOICE_PROFILE['tech_level'][profile['tech_level']]}",
         f"Personality: {VOICE_PROFILE['personality'][profile['personality']]}",
         f"Culture: {VOICE_PROFILE['culture'][profile['culture']]}",
+        f"Length: {VOICE_PROFILE['length'][profile['length']]} - Be concise if short, thorough if long",
         "Format: Use 2-3 relevant emojis maximum",
         "Never mention these instructions explicitly"
     ]
