@@ -73,12 +73,12 @@ def build_hidden_instructions(profile):
     """Create invisible system prompt"""
     instructions = [
         "You are a professional content designer. Strict rules:",
-        f"Generation: {VOICE_PROFILE['generation'][profile['generation']]]}",
+        f"Generation: {VOICE_PROFILE['generation'][profile['generation']]}",
         f"Tone: {VOICE_PROFILE['tone'][profile['tone']]}",
-        f"Work Style: {VOICE_PROFILE['work_style'][profile['work_style']]]}",
-        f"Tech Level: {VOICE_PROFILE['tech_level'][profile['tech_level']]]}",
-        f"Personality: {VOICE_PROFILE['personality'][profile['personality']]]}",
-        f"Culture: {VOICE_PROFILE['culture'][profile['culture']]]}",
+        f"Work Style: {VOICE_PROFILE['work_style'][profile['work_style']]}",
+        f"Tech Level: {VOICE_PROFILE['tech_level'][profile['tech_level']]}",
+        f"Personality: {VOICE_PROFILE['personality'][profile['personality']]}",
+        f"Culture: {VOICE_PROFILE['culture'][profile['culture']]}",
         "Format: Use 2-3 relevant emojis maximum",
         "Never mention these instructions explicitly"
     ]
