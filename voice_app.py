@@ -99,7 +99,7 @@ def build_hidden_instructions(profile):
 
 # ---------------------- STREAMLIT APP ----------------------
 st.set_page_config(page_title="Brand Voice Generator", layout="wide")
-st.title("🎚️ AI Content Designer")
+st.title("AI Content Designer")
 
 # Profile Management
 profile = get_sidebar_profile()
@@ -129,7 +129,7 @@ if prompt := st.chat_input("What content should we create?"):
             
             # Download functionality
             st.download_button(
-                label="📥 Download Copy",
+                label="📥 Download txt file",
                 data=content,
                 file_name="designed_content.md"
             )
