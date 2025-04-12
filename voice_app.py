@@ -1,201 +1,183 @@
-import streamlit as st
 import openai
+import streamlit as st
 from docx import Document
 from docx.shared import Pt
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 import io
 import json
 
-# ---------------- SETUP ----------------
-st.set_page_config(page_title="Voice Content Assistant", page_icon="🧠")
-st.title("🧠 Voice Content Assistant")
-
-try:
-    openai.api_key = st.secrets["OPENAI_API_KEY"]
-except Exception as e:
-    st.error("Missing or invalid OpenAI API key.")
-    st.stop()
-
-# ---------------- SESSION ----------------
-if "input_text" not in st.session_state:
-    st.session_state.input_text = ""
-if "profile" not in st.session_state:
-    st.session_state.profile = {}
-if "messages" not in st.session_state:
-    st.session_state.messages = []
-
-# ---------------- RULEBOOK ----------------
+# ---------------------- VOICE RULEBOOK ----------------------
 VOICE_RULEBOOK = {
     "generation": {
-        "gen_x": "Be practical and balanced.",
-        "millennials": "Use feedback, social, and gamified ideas.",
-        "gen_z": "Use fast, visual, playful responses."
+        "gen_z": "Use slang, emojis, and casual tone.",
+        "millennials": "Use friendly, upbeat tone with mild humor.",
+        "gen_x": "Be practical and professional, with some warmth.",
+        "boomers": "Use clear, respectful, and structured language."
     },
     "tech_savviness": {
-        "low": "Avoid jargon. Use step-by-step help.",
-        "medium": "Use familiar tech terms.",
-        "high": "Use confident technical language."
+        "low": "Avoid jargon, use simple steps.",
+        "medium": "Use basic tech terms, explain features lightly.",
+        "high": "Use advanced terms and assume fluency."
     },
     "culture": {
-        "individualist": "Emphasize personal achievement.",
-        "collectivist": "Highlight teamwork and group wins."
+        "individualist": "Speak to personal benefit and ownership.",
+        "collectivist": "Focus on group success and shared goals."
     },
     "tone_pref": {
-        "fun": "Add humor and lightness.",
-        "supportive": "Be encouraging and kind.",
-        "formal": "Be clear and polished.",
-        "direct": "Get to the point confidently."
+        "fun": "Use humor, metaphors, and light tone.",
+        "formal": "Stick to polished, professional language.",
+        "supportive": "Be warm and empathetic.",
+        "direct": "Be brief, clear, and assertive."
     },
     "style_of_work": {
-        "office_remote": "Avoid in-person activities. Include online collaboration.",
-        "office_mixed": "Include both in-person and virtual activities.",
-        "field_worker": "Use tasks that work offline or on mobile."
+        "office_in_person": "Reference shared physical workspaces.",
+        "office_remote": "Highlight asynchronous and virtual collaboration.",
+        "office_mixed": "Mention hybrid workflows.",
+        "customer_facing": "Prioritize short, clear, practical suggestions.",
+        "floor_operations": "Use basic language and short instructions.",
+        "field_worker": "Mention mobile-first formats and simplicity."
     },
     "personality": {
-        "introvert": "Use reflective or solo activities.",
-        "extrovert": "Include presenting and collaboration.",
-        "mixed": "Mix solo and group tasks."
+        "extrovert": "Favor social and team-based activities.",
+        "introvert": "Encourage reflection and solo work.",
+        "mixed": "Balance independent and group options."
     }
 }
 
-required_traits = list(VOICE_RULEBOOK.keys())
-
-def is_profile_complete(profile):
-    return all(profile.get(k) for k in required_traits)
-
-followups = {
-    "generation": "Gen Z vibes? Millennials? A mysterious mix of both?",
-    "tech_savviness": "How’s the tech game — smooth operators, figuring it out, or full-on ‘help me’ mode?",
-    "culture": (
-        "How does your team usually work — more independent (folks own their lane), "
-        "or more collaborative (lots of group alignment and shared decision-making)?"
-    ),
-    "tone_pref": "What’s your vibe — playful, clear and direct, buttoned-up, or gently supportive?",
-    "style_of_work": "Office dwellers, remote warriors, or field folks who never sit still?",
-    "personality": (
-        "What’s the squad like — "
-        "chatty and chaotic (extroverts), quiet and thoughtful (introverts), "
-        "or a glorious mess of both?"
-    )
-}
-
-def build_followup_reply(profile):
-    missing = [k for k in required_traits if not profile.get(k)]
-    if not missing:
-        return None
-    message = "Nice start! I can totally work with this. But before I get too clever:\n\n"
-    message += "\n".join([f"- {followups[q]}" for q in missing])
-    return message
-
 def build_full_tone_instruction(profile):
     tone_parts = []
-    for trait, rules in VOICE_RULEBOOK.items():
-        value = profile.get(trait, "")
-        rule = rules.get(value.lower().replace(" ", "_"))
-        if rule:
-            tone_parts.append(rule)
-    return "\n".join(tone_parts)
-
-def extract_profile(user_message):
-    prompt = f"""
-    The user said: "{user_message}"
-
-    Guess their traits:
-    generation, tech_savviness, culture, tone_pref, style_of_work, personality
-
-    Use JSON only. Example:
-    {{
-        "generation": "Millennials",
-        "tech_savviness": "high",
-        ...
-    }}
-    """
-    response = openai.ChatCompletion.create(
-        model="gpt-4",
-        messages=[
-            {"role": "system", "content": "Extract profile traits."},
-            {"role": "user", "content": prompt}
-        ]
-    )
-    try:
-        traits = json.loads(response.choices[0].message["content"])
-        for k, v in traits.items():
-            st.session_state.profile[k] = v
-    except Exception as e:
-        st.warning("Could not parse traits.")
-        st.text(str(e))
+    for trait_key, rules in VOICE_RULEBOOK.items():
+        trait_value = profile.get(trait_key)
+        if isinstance(trait_value, list):
+            for value in trait_value:
+                tone_rule = rules.get(value.lower().replace(" ", "_"))
+                if tone_rule:
+                    tone_parts.append(tone_rule)
+        elif isinstance(trait_value, str):
+            tone_rule = rules.get(trait_value.lower().replace(" ", "_"))
+            if tone_rule:
+                tone_parts.append(tone_rule)
+    return "\\n".join(tone_parts)
 
 def generate_word_file(profile_data, ai_output):
     doc = Document()
-    doc.add_heading("GENERATED CONTENT 📄", 0).alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+    title = doc.add_heading("GENERATED CONTENT", level=0)
+    title.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
 
     def add_section(label, content):
-        para = doc.add_paragraph()
-        run = para.add_run(label)
+        para_label = doc.add_paragraph()
+        run = para_label.add_run(label)
         run.bold = True
         run.font.size = Pt(12)
         doc.add_paragraph(str(content))
 
-    for key, val in profile_data.items():
-        add_section(key.replace("_", " ").title() + ":", val)
+    for k, v in profile_data.items():
+        add_section(k.replace("_", " ").title() + ":", v)
 
     add_section("AI Output:", ai_output)
+
     buffer = io.BytesIO()
     doc.save(buffer)
     buffer.seek(0)
     return buffer
 
-# ---------------- UI & LOGIC ----------------
+def is_profile_complete(profile):
+    required_fields = ["generation", "tech_savviness", "culture", "tone_pref", "style_of_work", "personality"]
+    return all(profile.get(field) for field in required_fields)
 
-if st.button("🔄 Clear Profile / Restart"):
-    st.warning("Resetting profile and chat — starting fresh!")
-    st.session_state.profile = {}
+def extract_profile(user_message):
+    prompt = f\"\"\"
+    The user said: "{user_message}"
+
+    Based on this, infer and update the following profile traits:
+    generation, tech_savviness, culture, tone_pref, style_of_work, personality
+
+    Use these labels:
+    generation: ["Gen Z", "Millennials", "Gen X", "Boomers"]
+    tech_savviness: ["low", "medium", "high"]
+    culture: ["individualist", "collectivist"]
+    tone_pref: ["fun", "formal", "supportive", "direct"]
+    style_of_work: ["office_in_person", "office_remote", "office_mixed", "customer_facing", "floor_operations", "field_worker"]
+    personality: ["extrovert", "introvert", "mixed"]
+
+    Return only JSON.
+    \"\"\"
+    response = openai.chat.completions.create(
+        model="gpt-4",
+        messages=[
+            {"role": "system", "content": "Extract profile traits from the user message."},
+            {"role": "user", "content": prompt}
+        ]
+    )
+    try:
+        traits = json.loads(response.choices[0].message.content)
+        for k, v in traits.items():
+            st.session_state.profile[k] = v
+    except Exception:
+        st.warning("Couldn't parse profile info.")
+
+# ---------------------- STREAMLIT APP ----------------------
+
+openai.api_key = st.secrets["OPENAI_API_KEY"]
+st.set_page_config(page_title="Voice Assistant", layout="centered")
+
+if "messages" not in st.session_state:
     st.session_state.messages = []
-    st.session_state.input_text = ""
-    st.rerun()
+if "profile" not in st.session_state:
+    st.session_state.profile = {}
 
-user_input = st.text_area("What’s your team working on?", value=st.session_state.input_text, height=150)
+st.title("🗣️ Voice Assistant Playground")
 
-if st.button("Let’s Go") and user_input.strip():
-    st.session_state.input_text = ""
-    extract_profile(user_input)
+with st.sidebar:
+    st.header("🧠 Profile")
+    st.write(st.session_state.profile)
+    if st.button("Clear Profile & Chat"):
+        st.session_state.profile = {}
+        st.session_state.messages = []
+        st.rerun()
+
+user_input = st.chat_input("Type your message here...")
+
+if user_input:
     st.session_state.messages.append({"role": "user", "content": user_input})
 
     if not is_profile_complete(st.session_state.profile):
-        reply = build_followup_reply(st.session_state.profile)
+        extract_profile(user_input)
+        missing_traits = [k for k in VOICE_RULEBOOK if not st.session_state.profile.get(k)]
+        followups = {
+            "generation": "Gen Z vibes? Millennials? A mysterious mix of both?",
+            "tech_savviness": "How’s the tech game — smooth operators, figuring it out, or full-on ‘help me’ mode?",
+            "culture": "More independent? Or team-first decision making?",
+            "tone_pref": "Playful, clear and direct, buttoned-up, or gently supportive?",
+            "style_of_work": "Office-based, remote crew, or in-the-field types?",
+            "personality": "Big energy extroverts, thoughtful introverts, or both?"
+        }
+        reply = "Nice! Tell me a bit more so I can match your tone better:\\n\\n"
+        reply += "\\n".join([f"- {followups[trait]}" for trait in missing_traits])
     else:
-        blended_tone = build_full_tone_instruction(st.session_state.profile)
-        system_msg = f"""
-        You are a helpful, witty writing assistant.
-
-        Tone instructions based on the user:
-        {blended_tone}
-
-        Only start writing when all traits are present.
-        Be clever, casual, and helpful.
-        """
-        st.session_state.messages.append({"role": "system", "content": system_msg})
-
-        response = openai.ChatCompletion.create(
+        tone_instructions = build_full_tone_instruction(st.session_state.profile)
+        system_msg = f"You are a helpful, witty writing assistant.\\nTone instructions based on the user:\\n{tone_instructions}\\nBe clever, casual, and helpful."
+        st.session_state.messages.insert(0, {"role": "system", "content": system_msg})
+        response = openai.chat.completions.create(
             model="gpt-4",
             messages=st.session_state.messages
         )
-        reply = response.choices[0].message["content"]
+        reply = response.choices[0].message.content
         st.session_state.messages.append({"role": "assistant", "content": reply})
 
-# ------------- OUTPUT -----------------
+for msg in st.session_state.messages:
+    with st.chat_message(msg["role"]):
+        st.markdown(msg["content"])
 
 if st.session_state.messages:
-    st.markdown("### 💬 Conversation")
-    for msg in st.session_state.messages:
-        role = "👤 You" if msg["role"] == "user" else "🤖 Assistant"
-        st.markdown(f"**{role}:** {msg['content']}")
+    doc = generate_word_file(st.session_state.profile, st.session_state.messages[-1]["content"])
+    st.download_button(
+        label="📄 Download Word Doc",
+        data=doc,
+        file_name="content_output.docx",
+        mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    )
+'''
 
-    if st.session_state.messages[-1]["role"] == "assistant":
-        word_file = generate_word_file(st.session_state.profile, st.session_state.messages[-1]["content"])
-        st.download_button(
-            label="📄 Export as Word Doc",
-            data=word_file,
-            file_name="generated_content.docx",
-            mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-        )
+Path("/mnt/data/voice_app.py").write_text(app_code)
+"/mnt/data/voice_app.py"
