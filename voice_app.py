@@ -71,7 +71,8 @@ def build_full_tone_instruction(profile):
     for trait_key in ["generation", "tech_savviness", "hofstede_culture", 
                      "tone_pref", "place_of_work", "personality", "worker_style"]:
         trait_value = profile.get(trait_key, "unknown")
-    for key, rules in VOICE_RULEBOOK.items():
+        rules = VOICE_RULEBOOK.get(trait_key, {})
+        
         if isinstance(trait_value, list):
             for value in trait_value:
                 tone_parts.append(rules.get(value.lower().replace(" ", "_"), ""))
