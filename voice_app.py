@@ -1,12 +1,13 @@
-import openai
 import streamlit as st
 from docx import Document
 from docx.shared import Pt
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 import io
 import json
+from openai import OpenAI  # Updated import
 
-openai.api_key = st.secrets["OPENAI_API_KEY"]
+# Initialize OpenAI client
+client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])  # New client initialization
 
 # ---------------------- VOICE RULEBOOK ----------------------
 VOICE_RULEBOOK = {
@@ -123,7 +124,7 @@ def extract_profile(user_message):
 
     Return only JSON.
     """
-    response = openai.ChatCompletion.create(
+    response = client.chat.completions.create(  # Updated API call
         model="gpt-4",
         messages=[
             {"role": "system", "content": "Extract profile traits from the user message."},
@@ -131,15 +132,13 @@ def extract_profile(user_message):
         ]
     )
     try:
-        traits = json.loads(response['choices'][0]['message']['content'])
+        traits = json.loads(response.choices[0].message.content)  # Updated response access
         for k, v in traits.items():
             st.session_state.profile[k] = v
     except Exception:
         st.warning("Couldn't parse profile info.")
 
 # ---------------------- STREAMLIT APP ----------------------
-
-openai.api_key = st.secrets["OPENAI_API_KEY"]
 st.set_page_config(page_title="Custom Content Assistant", layout="centered")
 
 if "messages" not in st.session_state:
@@ -186,11 +185,11 @@ if user_input:
             f"instead of 'Just missing a few quick things to make sure the tone fits.')"
         )
         st.session_state.messages.insert(0, {"role": "system", "content": system_msg})
-        response = openai.chat.completions.create(
+        response = client.chat.completions.create(  # Updated API call
             model="gpt-4",
             messages=st.session_state.messages
         )
-        reply = response.choices[0].message.content
+        reply = response.choices[0].message.content  # Updated response access
         st.session_state.messages.append({"role": "assistant", "content": reply})
 
 for msg in st.session_state.messages:
