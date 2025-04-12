@@ -68,7 +68,7 @@ def get_sidebar_profile():
                              ["Short", "Medium", "Long"],
                              index=1)  # Default to Medium
         }
-        }
+        
 
 def validate_profile(profile):
     """Ensure all profile fields are selected"""
