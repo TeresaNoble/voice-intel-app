@@ -169,7 +169,7 @@ if user_input:
             "hofstede_culture": "More independent? Or team-first decision making?",
             "tone_pref": "Playful, clear and direct, buttoned-up, or gently supportive?",
             "place_of_work": "Office-based, remote crew, or in-the-field types?",
-            "personality": "Big energy extroverts, thoughtful introverts, or both?"
+            "personality": "Big energy extroverts, thoughtful introverts, or both?",
             "worker_style": "Practical, analytical, creative, interpersonal, or entrepreneurial?",
         }
         missing_traits = [k for k in VOICE_RULEBOOK if not st.session_state.profile.get(k)]
