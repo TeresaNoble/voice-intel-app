@@ -61,10 +61,10 @@ def get_user_profile():
 def build_system_message(profile):
     """Convert profile to AI instructions"""
     instructions = [
-        f"Generation ({profile['generation']}): {VOICE_PROFILE['generation'][profile['generation']}",
-        f"Tone ({profile['tone']}): {VOICE_PROFILE['tone'][profile['tone']}",
-        f"Work Style ({profile['work_style']}): {VOICE_PROFILE['work_style'][profile['work_style']}",
-        f"Tech Level ({profile['tech_level']}): {VOICE_PROFILE['tech_level'][profile['tech_level']}",
+        f"Generation ({profile['generation']}): {VOICE_PROFILE['generation'][profile['generation']]}",
+        f"Tone ({profile['tone']}): {VOICE_PROFILE['tone'][profile['tone']]}",
+        f"Work Style ({profile['work_style']}): {VOICE_PROFILE['work_style'][profile['work_style']]}",
+        f"Tech Level ({profile['tech_level']}): {VOICE_PROFILE['tech_level'][profile['tech_level']]}",
         f"Personality: {profile['personality']} - {'Group-oriented' if profile['personality'] == 'Extrovert' else 'Solo-focused'} engagement",
         f"Culture: {profile['culture']} - {'Team-focused' if profile['culture'] in ['Collaborative','Group'] else 'Individual-focused'} approach"
     ]
