@@ -49,7 +49,7 @@ VOICE_RULEBOOK = {
         "medium": "Use familiar tech terms. Include some intermediate tips.",
         "high": "Use technical terms fluently. Provide advanced customization options."
     },
-    "hofstede": {
+    "hofstede_culture": {
         "high_power_distance": "Maintain clear roles and hierarchy in tone.",
         "low_power_distance": "Use a collaborative tone. Flatten hierarchy.",
         "individualism": "Emphasize personal achievement and autonomy.",
@@ -104,7 +104,7 @@ def generate_word_file(profile_data, ai_output):
     return buffer
 
 def is_profile_complete(profile):
-    required_fields = ["generation", "tech_savviness", "culture", "tone_pref", "place_of_work", "personality"]
+    required_fields = ["generation", "tech_savviness", "hofstede_culture", "tone_pref", "place_of_work", "personality"]
     return all(profile.get(field) for field in required_fields)
 
 def extract_profile(user_message):
@@ -166,10 +166,11 @@ if user_input:
         followups = {
             "generation": "Gen Z vibes? Millennials? A mysterious mix of both?",
             "tech_savviness": "How’s the tech game — smooth operators, figuring it out, or full-on ‘help me’ mode?",
-            "culture": "More independent? Or team-first decision making?",
+            "hofstede_culture": "More independent? Or team-first decision making?",
             "tone_pref": "Playful, clear and direct, buttoned-up, or gently supportive?",
             "place_of_work": "Office-based, remote crew, or in-the-field types?",
             "personality": "Big energy extroverts, thoughtful introverts, or both?"
+            "Worker_style": "Practical, analytical, creative, interpersonal, or entrepreneurial?",
         }
         missing_traits = [k for k in VOICE_RULEBOOK if not st.session_state.profile.get(k)]
         reply = "Nice! Tell me a bit more so I can match your tone better:\n\n"
