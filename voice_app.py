@@ -71,6 +71,7 @@ VOICE_RULEBOOK = {
     }
     }
 
+
 def build_full_tone_instruction(profile):
     tone_parts = []
     for trait_key, rules in VOICE_RULEBOOK.items():
@@ -129,7 +130,7 @@ def extract_profile(user_message):
 
     Return only JSON.
     """
-    response = openai.chat.completions.create(
+    response = openai.ChatCompletion.create(
         model="gpt-4",
         messages=[
             {"role": "system", "content": "Extract profile traits from the user message."},
