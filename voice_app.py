@@ -170,7 +170,7 @@ if user_input:
             "tone_pref": "Playful, clear and direct, buttoned-up, or gently supportive?",
             "place_of_work": "Office-based, remote crew, or in-the-field types?",
             "personality": "Big energy extroverts, thoughtful introverts, or both?"
-            "Worker_style": "Practical, analytical, creative, interpersonal, or entrepreneurial?",
+            "worker_style": "Practical, analytical, creative, interpersonal, or entrepreneurial?",
         }
         missing_traits = [k for k in VOICE_RULEBOOK if not st.session_state.profile.get(k)]
         reply = "Nice! Tell me a bit more so I can match your tone better:\n\n"
