@@ -124,40 +124,41 @@ if prompt := st.chat_input("What content should we create?"):
     # Hide the instructions panel after the first message
     st.session_state.instructions_shown = False
     
-# Generate content with hidden rules
-system_msg = {"role": "system", "content": build_hidden_instructions(profile)}
+    # Generate content with hidden rules
+    system_msg = {"role": "system", "content": build_hidden_instructions(profile)}
         
     response = client.chat.completions.create(
           model="gpt-4",
           messages=[system_msg, {"role": "user", "content": prompt}]
         )
         
-# Display response
-with st.chat_message("assistant"):
-            content = response.choices[0].message.content
-            st.write(content)
+    # Display response
+    with st.chat_message("assistant"):
+        content = response.choices[0].message.content
+        st.write(content)
             
-            # Download as text file
-            st.download_button(
-                label="📥 Download txt file",
-                data=content,
-                file_name="content.md"
-            )
+        # Download as text file
+        st.download_button(
+          label="📥 Download txt file",
+          data=content,
+          file_name="content.md"
+        )
             
-            # Export as Word document
-            doc = Document()
-            doc.add_heading("Generated Content", level=1)
-            doc.add_paragraph(content)
-            word_file = "designed_content.docx"
-            doc.save(word_file)
-            
-            with open(word_file, "rb") as file:
-            st.download_button(
-                    label="📥 Download Word file",
-                    data=file,
-                    file_name=word_file,
-                    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-               )
+        # Export as Word document
+        doc = Document()
+        doc.add_heading("Generated Content", level=1)
+        doc.add_paragraph(content)
+        word_file = "designed_content.docx"
+        doc.save(word_file)
+                        
+        with open(word_file, "rb") as file:
+              st.download_button(
+                label="📥 Download Word file",
+                data=file,
+                file_name=word_file,
+              
+    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        )
 
 # Display conversation history
 for msg in st.session_state.get("messages", []):
