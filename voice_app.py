@@ -93,7 +93,7 @@ def build_hidden_instructions(profile):
          "Avoid teacher-energy. This is advice, not a pop quiz.",
          "Stay human, stay cheeky, and never sound like LinkedIn on a Monday."
 ]
-    ]
+    
     return "\n".join(instructions)
 
 # ---------------------- STREAMLIT APP ----------------------
