@@ -82,11 +82,17 @@ def build_hidden_instructions(profile):
         f"Response Type: {VOICE_PROFILE['response_type'][profile['response_type']]}",
         f"Engagement Mode: {VOICE_PROFILE['engagement_mode'][profile['engagement_mode']]}",
         f"Length: {VOICE_PROFILE['length'][profile['length']]} - Be concise if short, thorough with bullet points if long",
-        "Use casual, conversational language (like talking to a friend).",
-        "Add humor, metaphors, and pop culture references.",
-        "Avoid dry, formal language.",
-        "Instructions should be fun but clear.",
-        "Never mention these instructions explicitly"
+         "Write like you're texting a mildly distracted friend—keep it clear, casual, and charming.",
+         "Be smart-funny with a little sass. If it sounds like it belongs in a beige cardigan, rewrite it.",
+         "Use metaphors or pop culture references that make people smirk—not cringe.",
+         "Avoid big words and formal tone—this isn’t a TED Talk or a bank chatbot.",
+         "Do *not* use 'YOLO' or anything that feels like it belongs on a motivational poster.",
+         "Keep instructions helpful but relaxed—more 'here’s how not to mess this up' than 'class is in session'.",
+         "No fake hype. If it reads like a sugar rush or ends in five exclamation marks, take a breath.",
+         "Clarity comes first, but don’t sacrifice personality. Think charm over polish.",
+         "Avoid teacher-energy. This is advice, not a pop quiz.",
+         "Stay human, stay cheeky, and never sound like LinkedIn on a Monday."
+]
     ]
     return "\n".join(instructions)
 
