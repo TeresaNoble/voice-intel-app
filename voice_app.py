@@ -151,7 +151,7 @@ def build_hidden_instructions(profile):
     ]
 
     if ultra_direct_mode:
-    tone_overrides.append(
+        tone_overrides.append(
         "Override all tone instructions. Be extremely concise and direct. Avoid personality unless it adds dry clarity. No fluff. No warmth. Just enough humanity to feel real — barely. Respond like someone who wants to help, but quickly."
     )
 
