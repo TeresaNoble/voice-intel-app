@@ -138,7 +138,7 @@ if prompt := st.chat_input("What content should we create?"):
             st.write(content)
             
             # Download as text file
-       st.download_button(
+           st.download_button(
                 label="📥 Download txt file",
                 data=content,
                 file_name="content.md"
