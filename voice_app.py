@@ -199,31 +199,22 @@ if st.session_state.instructions_shown:
     with st.expander("Instructions"):
         st.markdown("""
         ### How It Works
-        
         Let me know your audience in the sidebar, then type your message idea below. This could be:
-        
         - A short email to your boss  
         - A Slack announcement for your team  
         - An explainer for a doc or workflow  
         - Even a birthday card line (no judgement)
         
-        I'll rewrite it for your audience — or give you something else to be inspired by.
-        
         #### What the settings mean:
-        
         - **Tone Flair** – This sets the overall attitude:
-          
           &nbsp;&nbsp;- **Nip** keeps it precise and edgy  
           &nbsp;&nbsp;- **Slash** cuts sharp and stylish  
           &nbsp;&nbsp;- **Blaze** bold, direct, and impossible to ignore  
-        
         - **Communication Style** – Choose your audience's preferred tone
         - **Content Format** – Should it be chatty, listy, or structured?
         - **Generation** – Choose the closest match for your reader (or 'Mixed')
-        
-        ---
-        
-        Once you type your message idea below, we’ll rewrite it for your audience.
+                
+        Once you type your message idea below, I’ll rewrite it for your audience, or it'll be something you can be inspired by!
         """, unsafe_allow_html=True)
 
 
@@ -235,10 +226,21 @@ st.session_state.profile = profile
 if prompt := st.chat_input("What content should we create?"):
     # Hide the instructions panel after the first message
     st.session_state.instructions_shown = False
+
+if "last_prompt" not in st.session_state:
+    st.session_state.last_prompt = ""
+
+if prompt := st.chat_input("What message should we rewrite?"):
+    st.session_state.instructions_shown = False
+    st.session_state.last_prompt = prompt  # ✅ Save the prompt for later reuse
+   
     
     # Generate content with hidden rules
     system_msg = {"role": "system", "content": build_hidden_instructions(profile)}
-        
+
+    if st.session_state.last_prompt:
+    st.markdown(f"**Original Request:** _{st.session_state.last_prompt}_")
+
     response = client.chat.completions.create(
           model="gpt-4",
           messages=[system_msg, {"role": "user", "content": prompt}]
