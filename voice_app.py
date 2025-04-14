@@ -98,20 +98,26 @@ def build_hidden_instructions(profile):
         "Nip": [
             "",
             "## Current Mood: Nip",
-            "- Precision over punch. Every word should land without leaving a mark.",
-            "- Let the subtext do the talking — this is whispered shade, not a shout."
+            "- Whispered precision. Every word is chosen, not wasted.",
+            "- Say more with less. Let the silence echo.",
+            "- Cool restraint, not cold. Still modern, still sharp. Still you.",
+            "- No beige cardigans, but we’re not setting the room on fire either."
         ],
         "Slash": [
             "",
             "## Current Mood: Slash",
             "- Stylish damage only — use wit like a scalpel, not a hammer.",
-            "- Glamorous edge required. If it doesn't cut *and* look good doing it, it's not Slash." 
+            "- Glamorous edge required. If it doesn't cut *and* look good doing it, it's not Slash.",
+            "- Humor with polish. Think fashion editorial, but meaner.",
+            "- Everything should read like it’s already being quoted by someone cooler than you."
         ],
         "Blaze": [
             "",
             "## Current Mood: Blaze",
-            "- Maximum drama. Go big, bold, and maybe a little dangerous.",
-            "- Every line should sizzle with sass. Leave no souls unscorched."
+            "- Be bold, savage, and a little theatrical.",
+            "- Add sarcasm. Drag gently. Roast deadlines like they owe you money.",
+            "- Assume the reader has a brain — and a flair for drama.",
+            "- If the line doesn't sting or sparkle, rewrite it."
         ]
     }
     user_preferences = [
