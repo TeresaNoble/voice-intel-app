@@ -149,7 +149,7 @@ def build_hidden_instructions(profile):
             "- Confidence is the baseline. The tone should command, not beg.",
             "- Be bold, but don’t perform. Drop truths, not punchlines.",
             "- No hand-holding, no padding. Every line should feel like a decision.",
-            "- Sarcasm is allowed — but it better be earned.",
+            "- Sarcasm is essential.",
             "- Cut the theatrics. You’re not on stage, you’re in charge."
         ]        
     }
