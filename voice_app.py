@@ -51,6 +51,15 @@ def get_sidebar_profile():
     """Collect core profile through sidebar"""
     with st.sidebar:
         st.header("Profile Settings")
+
+        # Add tone flair selector
+        tone_flair = st.select_slider(
+            "Tone Flair",
+            options=["Nip", "Slash", "Blaze"],
+            value="Slash",
+            help="Choose how bold you want the tone: Nip is subtle and clever, Slash has style and bite, Blaze goes full drama."
+        )
+        
         return {
             "messaging_style": st.selectbox("Messaging Style", list(VOICE_PROFILE["messaging_style"].keys())),
             "motivation_trigger": st.selectbox("Motivation Trigger", list(VOICE_PROFILE["motivation_trigger"].keys())),
@@ -59,7 +68,8 @@ def get_sidebar_profile():
             "engagement_mode": st.selectbox("Engagement Mode", list(VOICE_PROFILE["engagement_mode"].keys())),
             "length": st.radio("Content Length", 
                              ["Short", "Medium", "Long"],
-                             index=1)  # Default to Medium
+                             index=1),
+            "tone_flair": tone_flair# Default to Medium
         }
 
 def validate_profile(profile):
@@ -73,28 +83,38 @@ def validate_profile(profile):
 
 # ---------------------- CORE ENGINE ----------------------
 def build_hidden_instructions(profile):
-    """Create invisible system prompt"""
-    instructions = [
-        "You are a professional content designer. Strict rules:",
-        f"Messaging Style: {VOICE_PROFILE['messaging_style'][profile['messaging_style']]}",
+    base_tone = [
+        "Write like you're texting a mildly distracted friend — clear, casual, and charming.",
+        "Avoid big words and formal tone — this isn’t a TED Talk or a bank chatbot.",
+        "Clarity comes first, but don’t sacrifice personality. Think charm over polish.",
+        "Stay human, stay cheeky, and never sound like LinkedIn on a Monday.",
+    ]
+
+    tone_flair = {
+        "Nip": [
+            "Precision over punch. Every word should land without leaving a mark.",
+            "Let the subtext do the talking — this is whispered shade, not a shout."
+        ],
+        "Slash": [
+            "Stylish damage only — use wit like a scalpel, not a hammer.",
+            "Glamorous edge required. If it doesn't cut *and* look good doing it, it's not Slash." 
+        ],
+        "Blaze": [
+            "Maximum drama. Go big, bold, and maybe a little dangerous.",
+            "Every line should sizzle with sass. Leave no souls unscorched."
+        ]
+    ]
+
+    profile_instructions = [
+        f"Flavor your tone with {profile['messaging_style'].lower()} energy: {VOICE_PROFILE['messaging_style'][profile['messaging_style']]}",
         f"Motivation Trigger: {VOICE_PROFILE['motivation_trigger'][profile['motivation_trigger']]}",
         f"Processing Style: {VOICE_PROFILE['processing_style'][profile['processing_style']]}",
         f"Response Type: {VOICE_PROFILE['response_type'][profile['response_type']]}",
         f"Engagement Mode: {VOICE_PROFILE['engagement_mode'][profile['engagement_mode']]}",
-        f"Length: {VOICE_PROFILE['length'][profile['length']]} - Be concise if short, thorough with bullet points if long",
-         "Write like you're texting a mildly distracted friend—keep it clear, casual, and charming.",
-         "Be smart-funny with sass. If it sounds like it belongs in a beige cardigan, rewrite it.",
-         "Avoid big words and formal tone—this isn’t a TED Talk or a bank chatbot.",
-         "Do *not* use 'YOLO' or anything that feels like it belongs on a motivational poster.",
-         "Keep instructions helpful but relaxed—more 'here’s how not to mess this up' than 'class is in session'.",
-         "No fake hype. If it reads like a sugar rush or ends in five exclamation marks, take a breath.",
-         "Clarity comes first, but don’t sacrifice personality. Think charm over polish.",
-         "Avoid teacher-energy. This is advice, not a pop quiz.",
-         "Never include '-' in any responses.",
-         "Stay human, stay cheeky, and never sound like LinkedIn on a Monday."
-]
-    
-    return "\n".join(instructions)
+        f"Length: {VOICE_PROFILE['length'][profile['length']]} — Be concise if short, thorough with bullet points if long"
+    ]
+
+    return "\n".join(base_tone + tone_flair[profile["tone_flair"]] + [""] + profile_instructions)
 
 # ---------------------- STREAMLIT APP ----------------------
 st.set_page_config(page_title="Custom Content AI Generator", layout="wide")
@@ -113,7 +133,6 @@ if st.session_state.instructions_shown:
         - Like what you see? Smash that download button before the content disappears into the void.  
         - One query gets you one result. Copy or download it before it vanishes into the ether.
         """)
-        st.info("This panel will disappear after you type your first message.")
 
 # Profile Management
 profile = get_sidebar_profile()
