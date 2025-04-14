@@ -229,6 +229,8 @@ st.session_state.profile = profile
 # Chat Interface
 if "last_prompt" not in st.session_state:
     st.session_state.last_prompt = ""
+if "last_response" not in st.session_state:
+    st.session_state.last_response = ""
 
 if prompt := st.chat_input("What are we writing?"):
     st.session_state.instructions_shown = False
@@ -237,15 +239,22 @@ if prompt := st.chat_input("What are we writing?"):
     
     # Generate content with hidden rules
     system_msg = {"role": "system", "content": build_hidden_instructions(profile)}
-
-if st.session_state.last_prompt:
-     st.markdown(f"**Original Request:** _{st.session_state.last_prompt}_")
-
-        response = client.chat.completions.create(
+    response = client.chat.completions.create(
           model="gpt-4",
           messages=[system_msg, {"role": "user", "content": prompt}]
         )
-        
+
+    content = response.choices[0].message.content
+    st.session_state.last_response = content
+
+    st.markdown(f"**Original Request:** _{prompt}_")
+    with st.chat_message("assistant"):
+        st.write(content)
+
+if st.session_state.last_response:
+    st.markdown(f"**Original Request:** _{st.session_state.last_prompt}_")
+    st.markdown(st.session_state.last_response)
+
     # Display response
     with st.chat_message("assistant"):
         content = response.choices[0].message.content
