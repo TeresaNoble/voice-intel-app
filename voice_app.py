@@ -82,15 +82,13 @@ def get_sidebar_profile():
             ),  # Default to Medium
             "tone_flair": tone_flair,  # Include tone_flair in the returned profile
             "ultra_direct": ultra_direct
-        }
-
-        
+                    
                 # Spacer to push disclaimer to the bottom
         st.markdown("---")
         st.markdown(
             "🔓 *Not a vault.* This is an AI writing tool, not a diary. Don’t share anything sensitive, secret, or scandalous.",
             unsafe_allow_html=True
-        )
+        )}
 
 def validate_profile(profile):
     """Ensure all profile fields are selected"""
