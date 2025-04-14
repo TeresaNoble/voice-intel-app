@@ -232,8 +232,6 @@ if "last_prompt" not in st.session_state:
 if "last_response" not in st.session_state:
     st.session_state.last_response = ""
 
-prompt = st.chat_input("What are we writing?")
-
 if prompt := st.chat_input("What are you writing?"):
     st.session_state.instructions_shown = False
     st.session_state.last_prompt = prompt
