@@ -254,8 +254,19 @@ if st.session_state.last_response:
     st.markdown(st.session_state.last_response)
 
     # Add button to reuse last prompt
-    if st.button("↩️ Reuse Last Prompt"):
-        st.chat_input("What are we writing?", value=st.session_state.last_prompt)
+if st.button("↩️ Reuse Last Prompt"):
+    # Re-run the generation with last_prompt
+    system_msg = {"role": "system", "content": build_hidden_instructions(profile)}
+    response = client.chat.completions.create(
+        model="gpt-4",
+        messages=[system_msg, {"role": "user", "content": st.session_state.last_prompt}]
+    )
+    content = response.choices[0].message.content
+    st.session_state.last_response = content
+
+ if st.session_state.last_response:
+    st.markdown(f"**Original Request:** _{st.session_state.last_prompt}_")
+    st.markdown(st.session_state.last_response)
 
     # Download buttons
     st.download_button(
