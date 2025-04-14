@@ -13,7 +13,7 @@ VOICE_PROFILE = {
         "Encouraging": "Supportive and constructive.",
         "Playful": "Cheeky and casual.",
         "Witty": "Sharp with a hilarious dry English style twist.",
-        "Professional": "Professional tone, modern corporate.",
+        "Professional": "Stick to clarity and credibility. Prioritize useful information over personality. Avoid slang, metaphors, and theatrics. Maintain a confident, modern tone — think human, not chatty.",
         "Warm": "Friendly and human.",
         "Bold": "Confident, strong statements."
     },
@@ -108,6 +108,11 @@ def build_hidden_instructions(profile):
             f"Generation: {VOICE_PROFILE['generation'][profile['generation']]}",
             f"Length: {VOICE_PROFILE['length'][profile['length']]}",
         ])
+
+    if profile["tone_flair"] == "Blaze" and profile["communication_style"] in ["Professional", "Direct"]:
+    tone_overrides.append(
+        "Deliver bold, decisive statements. Skip the jokes, metaphors, or quirky analogies. Be assertive without being performative. No emojis, no theatrics — just charisma and clarity."
+    )
 
     tone_overrides = []
     
