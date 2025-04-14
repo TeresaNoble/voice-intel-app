@@ -9,7 +9,7 @@ client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 # ---------------------- COMPLETE VOICE PROFILE ----------------------
 VOICE_PROFILE = {
     "messaging_style": {
-        "straight_talker": "Clear, efficient, and no-nonsense. Prioritizes action over explanation.",
+        "Straight Talker": "Clear, efficient, and no-nonsense. Prioritizes action over explanation.",
         "storyteller": "Uses metaphors, anecdotes, and emotion to engage. Great for persuasion and empathy.",
         "cheerleader": "Upbeat, encouraging, and motivating. Offers positive reinforcement and optimism.",
         "professional": "Polished, respectful, and structured. Ideal for formal or business contexts.",
