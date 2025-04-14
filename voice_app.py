@@ -157,7 +157,7 @@ if prompt := st.chat_input("What content should we create?"):
                     data=file,
                     file_name=word_file,
                     mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-                )
+               )
 
 # Display conversation history
 for msg in st.session_state.get("messages", []):
