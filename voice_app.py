@@ -249,18 +249,10 @@ if prompt := st.chat_input("What are we writing?"):
 
     st.markdown(f"**Original Request:** _{prompt}_")
     with st.chat_message("assistant"):
-        st.write(content)
-
-if st.session_state.last_response:
-    st.markdown(f"**Original Request:** _{st.session_state.last_prompt}_")
-    st.markdown(st.session_state.last_response)
-
-    # Display response
-    with st.chat_message("assistant"):
         content = response.choices[0].message.content
         st.write(content)
-            
-if st.session_state.last_response:
+
+ if st.session_state.last_response:
     st.markdown(f"**Original Request:** _{st.session_state.last_prompt}_")
     st.markdown(st.session_state.last_response)
 
@@ -284,7 +276,8 @@ if st.session_state.last_response:
             data=file,
             file_name=word_file,
             mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-        )
+        )           
+
 
 
 # Display conversation history
