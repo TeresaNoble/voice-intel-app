@@ -113,9 +113,11 @@ def build_hidden_instructions(profile):
 
     if profile["tone_flair"] == "Blaze" and profile["communication_style"] in ["Professional", "Direct"]:
         return "\n".join([
-            "Blaze Mode — controlled fire.",
-            "Tone must be bold, confident, and grounded. Avoid puns, exaggerated analogies, or playful metaphors.",
-            "Sarcasm should be sharp and strategic — never goofy. No filler. No cheerleading. Just cut-through clarity with charisma.",
+            "Blaze Mode — Executive edition.",
+            "Tone must be bold, direct, and human. Skip metaphors, branded sign-offs, or dramatic flourishes.",
+            "Keep sentences short. Prioritize frictionless clarity with a confident edge.",
+            "Sarcasm is welcome — if it stings, not sings.",
+            "No wordplay. No pep talk. This isn’t advertising — it’s communication.",
             "",
             f"Content Format: {VOICE_PROFILE['content_format'][profile['content_format']]}",
             f"Generation: {VOICE_PROFILE['generation'][profile['generation']]}",
