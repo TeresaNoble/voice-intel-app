@@ -90,6 +90,7 @@ def build_hidden_instructions(profile):
          "No fake hype. If it reads like a sugar rush or ends in five exclamation marks, take a breath.",
          "Clarity comes first, but don’t sacrifice personality. Think charm over polish.",
          "Avoid teacher-energy. This is advice, not a pop quiz.",
+         "Never include '-' in any responses.",
          "Stay human, stay cheeky, and never sound like LinkedIn on a Monday."
 ]
     
