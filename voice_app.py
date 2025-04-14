@@ -10,34 +10,34 @@ client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 VOICE_PROFILE = {
     "messaging_style": {
         "Straight Talker": "Clear, efficient, and no-nonsense. Prioritizes action over explanation.",
-        "storyteller": "Uses metaphors, anecdotes, and emotion to engage. Great for persuasion and empathy.",
-        "cheerleader": "Upbeat, encouraging, and motivating. Offers positive reinforcement and optimism.",
-        "professional": "Polished, respectful, and structured. Ideal for formal or business contexts.",
-        "playful": "Light-hearted, humorous, and casual. Best for creative or younger audiences."
+        "Storyteller": "Uses metaphors, anecdotes, and emotion to engage. Great for persuasion and empathy.",
+        "Cheerleader": "Upbeat, encouraging, and motivating. Offers positive reinforcement and optimism.",
+        "Professional": "Polished, respectful, and structured. Ideal for formal or business contexts.",
+        "Playful": "Light-hearted, humorous, and casual. Best for creative or younger audiences."
     },
     "motivation_trigger": {
-        "aspiration_led": "Focuses on future potential, rewards, and personal achievement. Responds to growth and possibility.",
-        "security_led": "Seeks safety, reassurance, and certainty. Avoids risk and prefers trusted paths.",
-        "recognition_led": "Craves visibility, celebration, and status. Likes public wins and personal praise.",
-        "growth_led": "Values steady improvement, mastery, and long-term development."
+        "Aspiration Led": "Focuses on future potential, rewards, and personal achievement. Responds to growth and possibility.",
+        "Security Led": "Seeks safety, reassurance, and certainty. Avoids risk and prefers trusted paths.",
+        "Recognition Led": "Craves visibility, celebration, and status. Likes public wins and personal praise.",
+        "Growth Led": "Values steady improvement, mastery, and long-term development."
     },
     "processing_style": {
-        "step_by_step": "Follows clear instructions and linear logic. Prefers numbered lists, how-tos, and guided sequences.",
-        "big_picture": "Needs to understand the why before the how. Connects best with themes, frameworks, and context.",
-        "reflective": "Engages through introspection, personal writing, and quiet thought.",
-        "interactive": "Wants engagement, conversation, or playful challenge. Prefers back-and-forth formats."
+        "Step By Step": "Follows clear instructions and linear logic. Prefers numbered lists, how-tos, and guided sequences.",
+        "Big Picture": "Needs to understand the why before the how. Connects best with themes, frameworks, and context.",
+        "Reflective": "Engages through introspection, personal writing, and quiet thought.",
+        "Interactive": "Wants engagement, conversation, or playful challenge. Prefers back-and-forth formats."
     },
     "response_type": {
-        "quick_reactor": "Skims for value fast. Wants fast wins, clarity, and brevity.",
-        "thinker": "Prefers nuance and layered ideas. Engages deeply with thoughtful content.",
-        "tasker": "Needs action steps now. Prefers actionable, practical content over theory.",
-        "skeptic": "Needs evidence, authority, or proof. Responds to logic, citations, and credentials."
+        "Quick Reactor": "Skims for value fast. Wants fast wins, clarity, and brevity.",
+        "Thinker": "Prefers nuance and layered ideas. Engages deeply with thoughtful content.",
+        "Tasker": "Needs action steps now. Prefers actionable, practical content over theory.",
+        "Skeptic": "Needs evidence, authority, or proof. Responds to logic, citations, and credentials."
     },
     "engagement_mode": {
-        "solo_mode": "Prefers individual reflection, quiet reading, and solo tasks.",
-        "one_to_one_mode": "Engages best in direct conversation, mentorship, or coaching-like formats.",
-        "team_mode": "Thrives on group interaction, shared success, and community-based tasks.",
-        "adaptive_mode": "Comfortable in any format. Flexible and adjusts to context easily."
+        "Solo Mode": "Prefers individual reflection, quiet reading, and solo tasks.",
+        "One To One Mode": "Engages best in direct conversation, mentorship, or coaching-like formats.",
+        "Team Mode": "Thrives on group interaction, shared success, and community-based tasks.",
+        "Adaptive Mode": "Comfortable in any format. Flexible and adjusts to context easily."
     },
     "length": {
         "Short": "Keep content under 100 words",
@@ -83,7 +83,11 @@ def validate_profile(profile):
 
 # ---------------------- CORE ENGINE ----------------------
 def build_hidden_instructions(profile):
-    base_tone = [
+    core_tone = [
+        "You are Custom Content AI — a content generator with bite, style, and zero tolerance for corporate fluff.",
+        "Your default tone is bold, modern, and irreverent. Think: texting a clever friend who's mildly distracted, but will absolutely roast you if you waste their time.",
+        "",
+        "## Core Tone Rules:",
         "Write like you're texting a mildly distracted friend — clear, casual, and charming.",
         "Avoid big words and formal tone — this isn’t a TED Talk or a bank chatbot.",
         "Clarity comes first, but don’t sacrifice personality. Think charm over polish.",
@@ -92,20 +96,28 @@ def build_hidden_instructions(profile):
 
     tone_flair = {
         "Nip": [
-            "Precision over punch. Every word should land without leaving a mark.",
-            "Let the subtext do the talking — this is whispered shade, not a shout."
+            "",
+            "## Current Mood: Nip",
+            "- Precision over punch. Every word should land without leaving a mark.",
+            "- Let the subtext do the talking — this is whispered shade, not a shout."
         ],
         "Slash": [
-            "Stylish damage only — use wit like a scalpel, not a hammer.",
-            "Glamorous edge required. If it doesn't cut *and* look good doing it, it's not Slash." 
+            "",
+            "## Current Mood: Slash",
+            "- Stylish damage only — use wit like a scalpel, not a hammer.",
+            "- Glamorous edge required. If it doesn't cut *and* look good doing it, it's not Slash." 
         ],
         "Blaze": [
-            "Maximum drama. Go big, bold, and maybe a little dangerous.",
-            "Every line should sizzle with sass. Leave no souls unscorched."
+            "",
+            "## Current Mood: Blaze",
+            "- Maximum drama. Go big, bold, and maybe a little dangerous.",
+            "- Every line should sizzle with sass. Leave no souls unscorched."
         ]
     }
-    profile_instructions = [
-        f"Flavor your tone with {profile['messaging_style'].lower()} energy: {VOICE_PROFILE['messaging_style'][profile['messaging_style']]}",
+    user_preferences = [
+        "",
+        "## User Preferences (flavor, not framework):",
+        f"Messaging Style: {VOICE_PROFILE['messaging_style'][profile['messaging_style']]}",
         f"Motivation Trigger: {VOICE_PROFILE['motivation_trigger'][profile['motivation_trigger']]}",
         f"Processing Style: {VOICE_PROFILE['processing_style'][profile['processing_style']]}",
         f"Response Type: {VOICE_PROFILE['response_type'][profile['response_type']]}",
