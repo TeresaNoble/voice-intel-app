@@ -198,18 +198,34 @@ if "instructions_shown" not in st.session_state:
 if st.session_state.instructions_shown:
     with st.expander("Instructions"):
         st.markdown("""
-        #### This is your content styling lab. You bring the message and we’ll help you shape it to hit right.
-            - **Tone Flair** This sets the overall attitude:
-                - **Nip** keeps it precise and edgy.
-                - **Slash** cuts sharp and stylish.
-                - **Blaze** bold, direct, and impossible to ignore.
-            - **Communication Style** Choose your audiences general communication vibe.
-            - **Content Format** How should the content appear in its final form as?
-            - **Generation** Pick the closest match for your audience or choose Mixed if you’re a crossover soul.
-        - Ready to roll? Drop your request in the chat box below and watch the magic (or mild chaos) unfold.
-        - Like what you see? Smash that download button before the content disappears into the void.
-        - One query gets you one result. Copy or download it before it vanishes into the ether.
-        """)
+        ### How It Works
+        
+        Let me know your audience in the sidebar, then type your message idea below. This could be:
+        
+        - A short email to your boss  
+        - A Slack announcement for your team  
+        - An explainer for a doc or workflow  
+        - Even a birthday card line (no judgement)
+        
+        I'll rewrite it for your audience — or give you something else to be inspired by.
+        
+        #### What the settings mean:
+        
+        - **Tone Flair** – This sets the overall attitude:
+          
+          &nbsp;&nbsp;- **Nip** keeps it precise and edgy  
+          &nbsp;&nbsp;- **Slash** cuts sharp and stylish  
+          &nbsp;&nbsp;- **Blaze** bold, direct, and impossible to ignore  
+        
+        - **Communication Style** – Choose your audience's preferred tone
+        - **Content Format** – Should it be chatty, listy, or structured?
+        - **Generation** – Choose the closest match for your reader (or 'Mixed')
+        
+        ---
+        
+        Once you type your message idea below, we’ll rewrite it for your audience.
+        """, unsafe_allow_html=True)
+
 
 # Profile Management
 profile = get_sidebar_profile()
