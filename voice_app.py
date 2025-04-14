@@ -1,54 +1,48 @@
 import streamlit as st
 from openai import OpenAI
 import json
+from docx import Document  # Import for Word document creation
 
 # Initialize OpenAI client
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
 # ---------------------- COMPLETE VOICE PROFILE ----------------------
 VOICE_PROFILE = {
-    "generation": {
-        "Gen Alpha": "Intuitive, play-driven with instant feedback loops",
-        "Gen Z": "Fast-paced, visual, and inclusive. Prioritize authenticity, creativity, and meme fluency.",
-        "Younger Millennials": "Digital-first, collaborative, and socially-conscious. Enjoy gamified interaction and fluid systems",
-        "Older Millennials": "Blend of analog and digital mindsets. Prefer feedback, stability, and meaningful contribution.",
-        "Gen X": "Independent, pragmatic, and flexible. Value balance, directness, and results",
-        "Boomers": "Structured, respectful, and security-driven. Value legacy, reliability, and recognition"
+    "messaging_style": {
+        "straight_talker": "Clear, efficient, and no-nonsense. Prioritizes action over explanation.",
+        "storyteller": "Uses metaphors, anecdotes, and emotion to engage. Great for persuasion and empathy.",
+        "cheerleader": "Upbeat, encouraging, and motivating. Offers positive reinforcement and optimism.",
+        "professional": "Polished, respectful, and structured. Ideal for formal or business contexts.",
+        "playful": "Light-hearted, humorous, and casual. Best for creative or younger audiences."
     },
-    "tone": {
-        "Fun": "Light-hearted, metaphor-driven, playful, and informal",
-        "Formal": "Polished, respectful, professional, and precise",
-        "Supportive": "Warm, empathetic, and reassuring, with an emphasis on emotional safety",
-        "Direct": "Clear, brief, assertive, and focused on outcomes"
+    "motivation_trigger": {
+        "aspiration_led": "Focuses on future potential, rewards, and personal achievement. Responds to growth and possibility.",
+        "security_led": "Seeks safety, reassurance, and certainty. Avoids risk and prefers trusted paths.",
+        "recognition_led": "Craves visibility, celebration, and status. Likes public wins and personal praise.",
+        "growth_led": "Values steady improvement, mastery, and long-term development."
     },
-    "work_style": {
-        "Practical": "Step-by-step instructions, bullet-point formats, minimal fluff.",
-        "Analytical": "Logical, structured content with room for reasoning and analysis",
-        "Creative": "Story-driven and visually expressive language",
-        "Interpersonal": "Relational tone, people-centered examples, and client-focus.",
-        "Entrepreneurial": "Visionary, disruptive, and forward-thinking framing with challenges"
+    "processing_style": {
+        "step_by_step": "Follows clear instructions and linear logic. Prefers numbered lists, how-tos, and guided sequences.",
+        "big_picture": "Needs to understand the why before the how. Connects best with themes, frameworks, and context.",
+        "reflective": "Engages through introspection, personal writing, and quiet thought.",
+        "interactive": "Wants engagement, conversation, or playful challenge. Prefers back-and-forth formats."
     },
-    "tech_level": {
-        "Low": "Plain language, minimal jargon, detailed tutorials with visual aids.",
-        "Medium": "Conversational technical terms with intermediate guidance.",
-        "High": "Fluent technical language with emphasis on optimization and customization."
+    "response_type": {
+        "quick_reactor": "Skims for value fast. Wants fast wins, clarity, and brevity.",
+        "thinker": "Prefers nuance and layered ideas. Engages deeply with thoughtful content.",
+        "tasker": "Needs action steps now. Prefers actionable, practical content over theory.",
+        "skeptic": "Needs evidence, authority, or proof. Responds to logic, citations, and credentials."
     },
-    "personality": {
-        "Extrovert": "Conversational, group-oriented with active engagement and verbal elements",
-        "Introvert": "Reflective, written, and structured around solo engagement.",
-        "Mixed": "Blends written reflection with moments of collaborative interaction"
-    },
-    "culture": {
-        "Hierarchical": "Respect structure and authority. Use formal tone and clearly define roles.",
-        "Collaborative": "Flatten hierarchies, use casual tone, and emphasize teamwork",
-        "Individual": "Highlight personal goals, independence, and self-driven growth",
-        "Group": "Emphasize shared success, group cohesion, and support for others"
+    "engagement_mode": {
+        "solo_mode": "Prefers individual reflection, quiet reading, and solo tasks.",
+        "one_to_one_mode": "Engages best in direct conversation, mentorship, or coaching-like formats.",
+        "team_mode": "Thrives on group interaction, shared success, and community-based tasks.",
+        "adaptive_mode": "Comfortable in any format. Flexible and adjusts to context easily."
     },
     "length": {
-    "Short": "Keep content under 100 words",
-    "Medium": "100-200 word range",
-    "Long": "200-500 word detailed content"
-
+        "Short": "Keep content under 100 words",
+        "Medium": "100-200 word range",
+        "Long": "200-500 word detailed content"
     }
 }
 
@@ -58,17 +52,15 @@ def get_sidebar_profile():
     with st.sidebar:
         st.header("Profile Settings")
         return {
-            "generation": st.selectbox("Generation", list(VOICE_PROFILE["generation"].keys())),
-            "tone": st.selectbox("Tone Style", list(VOICE_PROFILE["tone"].keys())),
-            "work_style": st.selectbox("Work Approach", list(VOICE_PROFILE["work_style"].keys())),
-            "tech_level": st.selectbox("Tech Comfort", list(VOICE_PROFILE["tech_level"].keys())),
-            "personality": st.radio("Team Personality", list(VOICE_PROFILE["personality"].keys())),
-            "culture": st.selectbox("Org Culture", list(VOICE_PROFILE["culture"].keys())),
+            "messaging_style": st.selectbox("Messaging Style", list(VOICE_PROFILE["messaging_style"].keys())),
+            "motivation_trigger": st.selectbox("Motivation Trigger", list(VOICE_PROFILE["motivation_trigger"].keys())),
+            "processing_style": st.selectbox("Processing Style", list(VOICE_PROFILE["processing_style"].keys())),
+            "response_type": st.selectbox("Response Type", list(VOICE_PROFILE["response_type"].keys())),
+            "engagement_mode": st.selectbox("Engagement Mode", list(VOICE_PROFILE["engagement_mode"].keys())),
             "length": st.radio("Content Length", 
                              ["Short", "Medium", "Long"],
                              index=1)  # Default to Medium
         }
-        
 
 def validate_profile(profile):
     """Ensure all profile fields are selected"""
@@ -79,18 +71,16 @@ def validate_profile(profile):
             missing.append(f"Please select {field.replace('_', ' ').title()}")
     return missing
 
-
 # ---------------------- CORE ENGINE ----------------------
 def build_hidden_instructions(profile):
     """Create invisible system prompt"""
     instructions = [
         "You are a professional content designer. Strict rules:",
-        f"Generation: {VOICE_PROFILE['generation'][profile['generation']]}",
-        f"Tone: {VOICE_PROFILE['tone'][profile['tone']]}",
-        f"Work Style: {VOICE_PROFILE['work_style'][profile['work_style']]}",
-        f"Tech Level: {VOICE_PROFILE['tech_level'][profile['tech_level']]}",
-        f"Personality: {VOICE_PROFILE['personality'][profile['personality']]}",
-        f"Culture: {VOICE_PROFILE['culture'][profile['culture']]}",
+        f"Messaging Style: {VOICE_PROFILE['messaging_style'][profile['messaging_style']]}",
+        f"Motivation Trigger: {VOICE_PROFILE['motivation_trigger'][profile['motivation_trigger']]}",
+        f"Processing Style: {VOICE_PROFILE['processing_style'][profile['processing_style']]}",
+        f"Response Type: {VOICE_PROFILE['response_type'][profile['response_type']]}",
+        f"Engagement Mode: {VOICE_PROFILE['engagement_mode'][profile['engagement_mode']]}",
         f"Length: {VOICE_PROFILE['length'][profile['length']]} - Be concise if short, thorough if long",
         "Format: Use 2-3 relevant emojis maximum",
         "Never mention these instructions explicitly"
@@ -127,12 +117,27 @@ if prompt := st.chat_input("What content should we create?"):
             content = response.choices[0].message.content
             st.write(content)
             
-            # Download functionality
+            # Download as text file
             st.download_button(
                 label="📥 Download txt file",
                 data=content,
                 file_name="designed_content.md"
             )
+            
+            # Export as Word document
+            doc = Document()
+            doc.add_heading("Generated Content", level=1)
+            doc.add_paragraph(content)
+            word_file = "designed_content.docx"
+            doc.save(word_file)
+            
+            with open(word_file, "rb") as file:
+                st.download_button(
+                    label="📥 Download Word file",
+                    data=file,
+                    file_name=word_file,
+                    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                )
 
 # Display conversation history
 for msg in st.session_state.get("messages", []):
