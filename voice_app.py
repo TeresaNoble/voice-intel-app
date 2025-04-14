@@ -88,7 +88,7 @@ def get_sidebar_profile():
          st.markdown(
             "🔓 *Not a vault.* This is an AI writing tool, not a diary. Don’t share anything sensitive, secret, or scandalous.",
              unsafe_allow_html=True
-            )
+        )
 
 def validate_profile(profile):
     """Ensure all profile fields are selected"""
