@@ -12,15 +12,15 @@ VOICE_PROFILE = {
         "Direct": "No fluff. Just the point.",
         "Encouraging": "Supportive and constructive.",
         "Playful": "Cheeky and casual.",
-        "Witty": "Sharp with a twist.",
-        "Professional": "Professional but personable.",
+        "Witty": "Sharp with a hilarious dry English style twist.",
+        "Professional": "Professional tone, modern corporate.",
         "Warm": "Friendly and human.",
         "Bold": "Confident, strong statements."
     },
     "content_format": {
         "Step-by-Step": "Give me a clear numbered sequence.",
         "Quick Summary": "Just the key points, fast. No waffle.",
-        "Detailed Breakdown": "Explain with depth.",
+        "Detailed Breakdown": "Explain clearly with depth and reasons.",
         "Action List": "What do I do next? Give bullet points.",
         "Analytical": "Back it up with logic.",
         "Conversational": "Make it feel like a chat."
