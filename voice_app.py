@@ -227,43 +227,43 @@ profile = get_sidebar_profile()
 st.session_state.profile = profile
 
 # Chat Interface
+# Chat interface and response rendering
 if "last_prompt" not in st.session_state:
     st.session_state.last_prompt = ""
 if "last_response" not in st.session_state:
     st.session_state.last_response = ""
 
-if prompt := st.chat_input("What are we writing?"):
+prompt = st.chat_input("What are we writing?")
+
+if prompt:
     st.session_state.instructions_shown = False
-    st.session_state.last_prompt = prompt  # ✅ Save the prompt for later reuse
-   
-    
-    # Generate content with hidden rules
+    st.session_state.last_prompt = prompt
+
     system_msg = {"role": "system", "content": build_hidden_instructions(profile)}
     response = client.chat.completions.create(
-          model="gpt-4",
-          messages=[system_msg, {"role": "user", "content": prompt}]
-        )
+        model="gpt-4",
+        messages=[system_msg, {"role": "user", "content": prompt}]
+    )
 
     content = response.choices[0].message.content
     st.session_state.last_response = content
 
-    st.markdown(f"**Original Request:** _{prompt}_")
-    with st.chat_message("assistant"):
-        content = response.choices[0].message.content
-        st.write(content)
-
+# Display last result
 if st.session_state.last_response:
     st.markdown(f"**Original Request:** _{st.session_state.last_prompt}_")
     st.markdown(st.session_state.last_response)
 
-    # Download as text
+    # Add button to reuse last prompt
+    if st.button("↩️ Reuse Last Prompt"):
+        st.chat_input("What are we writing?", value=st.session_state.last_prompt)
+
+    # Download buttons
     st.download_button(
         label="📥 Download txt file",
         data=st.session_state.last_response,
         file_name="AI Writing.md"
     )
 
-    # Export as Word doc
     doc = Document()
     doc.add_heading("Your AI Writing", level=1)
     doc.add_paragraph(st.session_state.last_response)
@@ -276,7 +276,8 @@ if st.session_state.last_response:
             data=file,
             file_name=word_file,
             mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-        )           
+        )
+          
 
 
 
