@@ -233,12 +233,14 @@ if "last_prompt" not in st.session_state:
 if "last_response" not in st.session_state:
     st.session_state.last_response = ""
 
+disclaimer_placeholder = st.empty()
+
 if prompt := st.chat_input("What are you writing?"):
     st.session_state.instructions_shown = False
     st.session_state.last_prompt = prompt
     st.session_state.last_response = ""  # ✅ Clear last response before generating new one
 
-    st.markdown(
+    disclaimer_placeholder.markdown(
     "🔓 *Not a vault.* This is an AI writing tool, not a diary. Don’t share anything sensitive, secret, or scandalous.",
     unsafe_allow_html=True
 )
