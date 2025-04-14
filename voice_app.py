@@ -61,7 +61,7 @@ def get_sidebar_profile():
             "generation": st.selectbox("Generation", list(VOICE_PROFILE["generation"].keys())),
             "length": st.radio("Content Length", 
                              ["Short", "Medium", "Long"],
-                             index=1)  # Default to Medium
+                             index=1),  # Default to Medium
             "tone_flair": tone_flair  # Include tone_flair in the returned profile
         }
 
