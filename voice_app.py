@@ -95,11 +95,6 @@ def validate_profile(profile):
 
 # ---------------------- CORE ENGINE ----------------------
 def build_hidden_instructions(profile):
-
-    if profile["tone_flair"] == "Blaze" and profile["communication_style"] in ["Professional", "Direct"]:
-        tone_overrides.append(
-        "Deliver bold, decisive statements. Skip the jokes, metaphors, or quirky analogies. Be assertive without being performative. No emojis, no theatrics — just charisma and clarity."
-    )
         
     if profile.get("ultra_direct", False):
         return "\n".join([
@@ -113,6 +108,11 @@ def build_hidden_instructions(profile):
             f"Generation: {VOICE_PROFILE['generation'][profile['generation']]}",
             f"Length: {VOICE_PROFILE['length'][profile['length']]}",
         ])
+
+    if profile["communication_style"] in ["Professional", "Direct"]:
+        tone_overrides.append(
+        "Deliver bold, decisive statements. Skip the jokes, metaphors, or quirky analogies. Be assertive without being performative. No emojis, no theatrics — just charisma and clarity."
+        )
 
     tone_overrides = []
     
