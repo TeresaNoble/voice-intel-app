@@ -187,6 +187,7 @@ st.set_page_config(page_title="Custom Content AI", layout="wide")
 st.title("AI Writing Assistant")
 st.markdown(
     "This tool helps you write any message fast.,
+    unsafe_allow_html=True
 )
 
 
