@@ -108,6 +108,8 @@ def build_hidden_instructions(profile):
             f"Generation: {VOICE_PROFILE['generation'][profile['generation']]}",
             f"Length: {VOICE_PROFILE['length'][profile['length']]}",
         ])
+
+    tone_overrides = []
     
     core_tone = [
         "You are Custom Content AI — a content generator with bite, style, and zero tolerance for corporate fluff.",
