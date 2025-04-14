@@ -109,7 +109,7 @@ def build_hidden_instructions(profile):
             f"Length: {VOICE_PROFILE['length'][profile['length']]}",
         ])
 
-     tone_overrides = []
+        tone_overrides = []
 
     if profile["communication_style"] in ["Professional", "Direct"]:
         tone_overrides.append(
