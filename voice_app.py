@@ -238,8 +238,8 @@ if prompt := st.chat_input("What message should we rewrite?"):
     # Generate content with hidden rules
     system_msg = {"role": "system", "content": build_hidden_instructions(profile)}
 
-    if st.session_state.last_prompt:
-    st.markdown(f"**Original Request:** _{st.session_state.last_prompt}_")
+if st.session_state.last_prompt:
+     st.markdown(f"**Original Request:** _{st.session_state.last_prompt}_")
 
     response = client.chat.completions.create(
           model="gpt-4",
@@ -251,28 +251,32 @@ if prompt := st.chat_input("What message should we rewrite?"):
         content = response.choices[0].message.content
         st.write(content)
             
-        # Download as text file
+if st.session_state.last_response:
+    st.markdown(f"**Original Request:** _{st.session_state.last_prompt}_")
+    st.markdown(st.session_state.last_response)
+
+    # Download as text
+    st.download_button(
+        label="📥 Download txt file",
+        data=st.session_state.last_response,
+        file_name="AI Writing.md"
+    )
+
+    # Export as Word doc
+    doc = Document()
+    doc.add_heading("Your AI Writing", level=1)
+    doc.add_paragraph(st.session_state.last_response)
+    word_file = "response.docx"
+    doc.save(word_file)
+
+    with open(word_file, "rb") as file:
         st.download_button(
-          label="📥 Download txt file",
-          data=content,
-          file_name="content.md"
+            label="📥 Download Word file",
+            data=file,
+            file_name=word_file,
+            mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         )
-            
-        # Export as Word document
-        doc = Document()
-        doc.add_heading("Generated Content", level=1)
-        doc.add_paragraph(content)
-        word_file = "designed_content.docx"
-        doc.save(word_file)
-                        
-        with open(word_file, "rb") as file:
-              st.download_button(
-                label="📥 Download Word file",
-                data=file,
-                file_name=word_file,
-              
-    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-        )
+
 
 # Display conversation history
 for msg in st.session_state.get("messages", []):
