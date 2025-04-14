@@ -111,10 +111,22 @@ def build_hidden_instructions(profile):
 
         tone_overrides = []
 
+    if profile["tone_flair"] == "Blaze" and profile["communication_style"] in ["Professional", "Direct"]:
+        return "\n".join([
+            "Blaze Mode — controlled fire.",
+            "Tone must be bold, confident, and grounded. Avoid puns, exaggerated analogies, or playful metaphors.",
+            "Sarcasm should be sharp and strategic — never goofy. No filler. No cheerleading. Just cut-through clarity with charisma.",
+            "",
+            f"Content Format: {VOICE_PROFILE['content_format'][profile['content_format']]}",
+            f"Generation: {VOICE_PROFILE['generation'][profile['generation']]}",
+            f"Length: {VOICE_PROFILE['length'][profile['length']]}",
+        ])
+    
     if profile["communication_style"] in ["Professional", "Direct"]:
         tone_overrides.append(
-        "Deliver bold, decisive statements. Skip the jokes, metaphors, or quirky analogies. Be assertive without being performative. No emojis, no theatrics — just charisma and clarity."
+            "Deliver bold, decisive statements. Skip the jokes, metaphors, or quirky analogies. Be assertive without being performative. No emojis, no theatrics — just charisma and clarity."
         )
+
     core_tone = [
         "You are Custom Content AI — a content generator with bite, style, and zero tolerance for corporate fluff.",
         "Your default tone is bold, modern, and irreverent. Think: texting a clever friend who's mildly distracted, but will absolutely roast you if you waste their time.",
@@ -124,8 +136,7 @@ def build_hidden_instructions(profile):
         "Avoid big words and formal tone — this isn’t a TED Talk or a bank chatbot.",
         "Clarity comes first, but don’t sacrifice personality. Think charm over polish.",
         "Stay human, stay cheeky, and never sound like LinkedIn on a Monday."
-        "Do not create themes, characters, metaphors, or narrative devices unless explicitly requested. Avoid turning simple tasks into storytelling. Keep it grounded in real-world language and tone."
-,
+        "Do not create themes, characters, metaphors, or narrative devices unless explicitly requested. Avoid turning simple tasks into storytelling. Keep it grounded in real-world language and tone.",
     ]
 
     tone_flair = {
