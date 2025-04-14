@@ -184,7 +184,11 @@ def build_hidden_instructions(profile):
 
 # ---------------------- STREAMLIT APP ----------------------
 st.set_page_config(page_title="Custom Content AI", layout="wide")
-st.title("AI Content Designer")
+st.title("AI Writing Assistant")
+st.markdown(
+    "This tool helps you write any message fast.,
+)
+
 
 # Instructions panel logic
 if "instructions_shown" not in st.session_state:
@@ -193,8 +197,7 @@ if "instructions_shown" not in st.session_state:
 if st.session_state.instructions_shown:
     with st.expander("Instructions"):
         st.markdown("""
-        ### Welcome to Custom Content AI
-        ## This is your content styling lab. You bring the message and we’ll help you shape it to hit right.
+        #### This is your content styling lab. You bring the message and we’ll help you shape it to hit right.
             - **Tone Flair** This sets the overall attitude:
                 - **Nip** keeps it precise and edgy.
                 - **Slash** cuts sharp and stylish.
