@@ -83,6 +83,11 @@ def build_hidden_instructions(profile):
         f"Engagement Mode: {VOICE_PROFILE['engagement_mode'][profile['engagement_mode']]}",
         f"Length: {VOICE_PROFILE['length'][profile['length']]} - Be concise if short, thorough if long",
         "Format: Use 2-3 relevant emojis maximum",
+        "Keep it light, use humor, and always add a creative twist.",
+        "Use casual, conversational language (like talking to a friend).",
+        "Add humor, metaphors, and pop culture references.",
+        "Avoid dry, formal language.",
+        "Instructions should be fun but clear.",
         "Never mention these instructions explicitly"
     ]
     return "\n".join(instructions)
