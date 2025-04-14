@@ -103,7 +103,6 @@ def build_hidden_instructions(profile):
             "Maximum drama. Go big, bold, and maybe a little dangerous.",
             "Every line should sizzle with sass. Leave no souls unscorched."
         ]
-    ]
 
     profile_instructions = [
         f"Flavor your tone with {profile['messaging_style'].lower()} energy: {VOICE_PROFILE['messaging_style'][profile['messaging_style']]}",
