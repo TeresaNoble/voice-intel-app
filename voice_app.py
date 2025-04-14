@@ -93,6 +93,10 @@ def validate_profile(profile):
             missing.append(f"Please select {field.replace('_', ' ').title()}")
     return missing
 
+if "last_response" not in st.session_state:
+    st.session_state.last_response = ""
+
+
 # ---------------------- CORE ENGINE ----------------------
 def build_hidden_instructions(profile):
     tone_overrides = []
@@ -223,14 +227,10 @@ profile = get_sidebar_profile()
 st.session_state.profile = profile
 
 # Chat Interface
-if prompt := st.chat_input("What content should we create?"):
-    # Hide the instructions panel after the first message
-    st.session_state.instructions_shown = False
-
 if "last_prompt" not in st.session_state:
     st.session_state.last_prompt = ""
 
-if prompt := st.chat_input("What message should we rewrite?"):
+if prompt := st.chat_input("What are we writing?"):
     st.session_state.instructions_shown = False
     st.session_state.last_prompt = prompt  # ✅ Save the prompt for later reuse
    
@@ -241,7 +241,7 @@ if prompt := st.chat_input("What message should we rewrite?"):
 if st.session_state.last_prompt:
      st.markdown(f"**Original Request:** _{st.session_state.last_prompt}_")
 
-    response = client.chat.completions.create(
+        response = client.chat.completions.create(
           model="gpt-4",
           messages=[system_msg, {"role": "user", "content": prompt}]
         )
