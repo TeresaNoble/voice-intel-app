@@ -110,7 +110,7 @@ def build_hidden_instructions(profile):
         ])
 
     if profile["tone_flair"] == "Blaze" and profile["communication_style"] in ["Professional", "Direct"]:
-    tone_overrides.append(
+        tone_overrides.append(
         "Deliver bold, decisive statements. Skip the jokes, metaphors, or quirky analogies. Be assertive without being performative. No emojis, no theatrics — just charisma and clarity."
     )
 
