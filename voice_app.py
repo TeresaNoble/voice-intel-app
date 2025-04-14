@@ -103,7 +103,7 @@ def build_hidden_instructions(profile):
             "Maximum drama. Go big, bold, and maybe a little dangerous.",
             "Every line should sizzle with sass. Leave no souls unscorched."
         ]
-
+    }
     profile_instructions = [
         f"Flavor your tone with {profile['messaging_style'].lower()} energy: {VOICE_PROFILE['messaging_style'][profile['messaging_style']]}",
         f"Motivation Trigger: {VOICE_PROFILE['motivation_trigger'][profile['motivation_trigger']]}",
@@ -112,7 +112,6 @@ def build_hidden_instructions(profile):
         f"Engagement Mode: {VOICE_PROFILE['engagement_mode'][profile['engagement_mode']]}",
         f"Length: {VOICE_PROFILE['length'][profile['length']]} — Be concise if short, thorough with bullet points if long"
     ]
-
     return "\n".join(base_tone + tone_flair[profile["tone_flair"]] + [""] + profile_instructions)
 
 # ---------------------- STREAMLIT APP ----------------------
