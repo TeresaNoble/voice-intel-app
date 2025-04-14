@@ -18,10 +18,10 @@ VOICE_PROFILE = {
         "Bold": "Confident, strong statements."
     },
     "content_format": {
-        "Step-by-Step": "Give me a clear sequence.",
-        "Quick Summary": "Just the key points, fast.",
+        "Step-by-Step": "Give me a clear numbered sequence.",
+        "Quick Summary": "Just the key points, fast. No waffle.",
         "Detailed Breakdown": "Explain with depth.",
-        "Action List": "What do I do next?",
+        "Action List": "What do I do next? Give bullet points.",
         "Analytical": "Back it up with logic.",
         "Conversational": "Make it feel like a chat."
     },
