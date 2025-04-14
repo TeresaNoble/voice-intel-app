@@ -108,6 +108,7 @@ def build_hidden_instructions(profile):
             "Drop the charm. Avoid metaphors, intros, or creative phrasing.",
             "Be concise, direct, and blunt — with just enough human edge to not sound robotic.",
             "No warm-ups. No analogies. No fluff.",
+            "Use full punctuation and capitalization. Do not mimic informal lowercase writing unless explicitly asked.",
             "",
             f"Content Format: {VOICE_PROFILE['content_format'][profile['content_format']]}",
             f"Generation: {VOICE_PROFILE['generation'][profile['generation']]}",
@@ -237,6 +238,10 @@ if prompt := st.chat_input("What are you writing?"):
     st.session_state.last_prompt = prompt
     st.session_state.last_response = ""  # ✅ Clear last response before generating new one
 
+    st.markdown(
+    "🔓 *Not a vault.* This is an AI writing tool, not a diary. Don’t share anything sensitive, secret, or scandalous.",
+    unsafe_allow_html=True
+)
     # Generate content
     system_msg = {"role": "system", "content": build_hidden_instructions(profile)}
     response = client.chat.completions.create(
