@@ -8,36 +8,31 @@ client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
 # ---------------------- COMPLETE VOICE PROFILE ----------------------
 VOICE_PROFILE = {
-    "messaging_style": {
-        "Straight Talker": "Clear, efficient, and no-nonsense. Prioritizes action over explanation.",
-        "Storyteller": "Uses metaphors, anecdotes, and emotion to engage. Great for persuasion and empathy.",
-        "Cheerleader": "Upbeat, encouraging, and motivating. Offers positive reinforcement and optimism.",
-        "Professional": "Polished, respectful, and structured. Ideal for formal or business contexts.",
-        "Playful": "Light-hearted, humorous, and casual. Best for creative or younger audiences."
+    "communication_style": {
+        "Direct": "No fluff. Just the point.",
+        "Encouraging": "Supportive and constructive.",
+        "Playful": "Cheeky and casual.",
+        "Witty": "Sharp with a twist.",
+        "Polished": "Professional but personable.",
+        "Warm": "Friendly and human.",
+        "Bold": "Confident, strong statements."
     },
-    "motivation_trigger": {
-        "Aspiration Led": "Focuses on future potential, rewards, and personal achievement. Responds to growth and possibility.",
-        "Security Led": "Seeks safety, reassurance, and certainty. Avoids risk and prefers trusted paths.",
-        "Recognition Led": "Craves visibility, celebration, and status. Likes public wins and personal praise.",
-        "Growth Led": "Values steady improvement, mastery, and long-term development."
+    "content_format": {
+        "Step-by-Step": "Give me a clear sequence.",
+        "Quick Summary": "Just the key points, fast.",
+        "Detailed Breakdown": "Explain with depth.",
+        "Action List": "What do I do next?",
+        "Analytical": "Back it up with logic.",
+        "Conversational": "Make it feel like a chat."
     },
-    "processing_style": {
-        "Step By Step": "Follows clear instructions and linear logic. Prefers numbered lists, how-tos, and guided sequences.",
-        "Big Picture": "Needs to understand the why before the how. Connects best with themes, frameworks, and context.",
-        "Reflective": "Engages through introspection, personal writing, and quiet thought.",
-        "Interactive": "Wants engagement, conversation, or playful challenge. Prefers back-and-forth formats."
-    },
-    "response_type": {
-        "Quick Reactor": "Skims for value fast. Wants fast wins, clarity, and brevity.",
-        "Thinker": "Prefers nuance and layered ideas. Engages deeply with thoughtful content.",
-        "Tasker": "Needs action steps now. Prefers actionable, practical content over theory.",
-        "Skeptic": "Needs evidence, authority, or proof. Responds to logic, citations, and credentials."
-    },
-    "engagement_mode": {
-        "Solo Mode": "Prefers individual reflection, quiet reading, and solo tasks.",
-        "One To One Mode": "Engages best in direct conversation, mentorship, or coaching-like formats.",
-        "Team Mode": "Thrives on group interaction, shared success, and community-based tasks.",
-        "Adaptive Mode": "Comfortable in any format. Flexible and adjusts to context easily."
+    "generation": {
+        "Gen Alpha (2013–2025)": "Immersed in tech. Intuitive and playful.",
+        "Gen Z (1997–2012)": "Fast, visual, and meme-fluent.",
+        "Millennials (1990–1996)": "Digital-native. Likes social and gamified tone.",
+        "Older Millennials (1981–1989)": "Bridges analog and digital. Values clarity and feedback.",
+        "Gen X (1965–1980)": "Independent and direct. Prefers practical and honest tone.",
+        "Boomers (1946–1964)": "Structured and respectful. Clear value and reliability.",
+        "Mixed / Not Sure": "Blend tone and rhythm across generations. Focus on clarity and personality."
     },
     "length": {
         "Short": "Keep content under 100 words",
@@ -61,15 +56,12 @@ def get_sidebar_profile():
         )
         
         return {
-            "messaging_style": st.selectbox("Messaging Style", list(VOICE_PROFILE["messaging_style"].keys())),
-            "motivation_trigger": st.selectbox("Motivation Trigger", list(VOICE_PROFILE["motivation_trigger"].keys())),
-            "processing_style": st.selectbox("Processing Style", list(VOICE_PROFILE["processing_style"].keys())),
-            "response_type": st.selectbox("Response Type", list(VOICE_PROFILE["response_type"].keys())),
-            "engagement_mode": st.selectbox("Engagement Mode", list(VOICE_PROFILE["engagement_mode"].keys())),
+            "communication_style": st.selectbox("Communication Style", list(VOICE_PROFILE["communication_style"].keys())),
+            "content_format": st.selectbox("Content Format", list(VOICE_PROFILE["content_format"].keys())),
+            "generation": st.selectbox("Generation", list(VOICE_PROFILE["generation"].keys())),
             "length": st.radio("Content Length", 
                              ["Short", "Medium", "Long"],
-                             index=1),
-            "tone_flair": tone_flair# Default to Medium
+                             index=1)  # Default to Medium
         }
 
 def validate_profile(profile):
@@ -127,17 +119,15 @@ def build_hidden_instructions(profile):
     user_preferences = [
         "",
         "## User Preferences (flavor, not framework):",
-        f"Messaging Style: {VOICE_PROFILE['messaging_style'][profile['messaging_style']]}",
-        f"Motivation Trigger: {VOICE_PROFILE['motivation_trigger'][profile['motivation_trigger']]}",
-        f"Processing Style: {VOICE_PROFILE['processing_style'][profile['processing_style']]}",
-        f"Response Type: {VOICE_PROFILE['response_type'][profile['response_type']]}",
-        f"Engagement Mode: {VOICE_PROFILE['engagement_mode'][profile['engagement_mode']]}",
-        f"Length: {VOICE_PROFILE['length'][profile['length']]} — Be concise if short, thorough with bullet points if long"
+        f"Communication Style: {VOICE_PROFILE['communication_style'][profile['communication_style']]}",
+        f"Content Format: {VOICE_PROFILE['content_format'][profile['content_format']]}",
+        f"Generation: {VOICE_PROFILE['generation'][profile['generation']]}",
+        f"Length: {VOICE_PROFILE['length'][profile['length']]} - Be concise if short, thorough if long",
     ]
     return "\n".join(core_tone + tone_flair[profile["tone_flair"]] + user_preferences)
 
 # ---------------------- STREAMLIT APP ----------------------
-st.set_page_config(page_title="Custom Content AI Generator", layout="wide")
+st.set_page_config(page_title="Custom Content AI", layout="wide")
 st.title("AI Content Designer")
 
 # Instructions panel logic
