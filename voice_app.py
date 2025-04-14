@@ -62,6 +62,7 @@ def get_sidebar_profile():
             "length": st.radio("Content Length", 
                              ["Short", "Medium", "Long"],
                              index=1)  # Default to Medium
+            "tone_flair": tone_flair  # Include tone_flair in the returned profile
         }
 
 def validate_profile(profile):
