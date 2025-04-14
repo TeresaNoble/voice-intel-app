@@ -109,13 +109,12 @@ def build_hidden_instructions(profile):
             f"Length: {VOICE_PROFILE['length'][profile['length']]}",
         ])
 
+     tone_overrides = []
+
     if profile["communication_style"] in ["Professional", "Direct"]:
         tone_overrides.append(
         "Deliver bold, decisive statements. Skip the jokes, metaphors, or quirky analogies. Be assertive without being performative. No emojis, no theatrics — just charisma and clarity."
         )
-
-    tone_overrides = []
-    
     core_tone = [
         "You are Custom Content AI — a content generator with bite, style, and zero tolerance for corporate fluff.",
         "Your default tone is bold, modern, and irreverent. Think: texting a clever friend who's mildly distracted, but will absolutely roast you if you waste their time.",
