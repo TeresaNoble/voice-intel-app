@@ -13,7 +13,7 @@ VOICE_PROFILE = {
         "Encouraging": "Supportive and constructive.",
         "Playful": "Cheeky and casual.",
         "Witty": "Sharp with a twist.",
-        "Polished": "Professional but personable.",
+        "Professional": "Professional but personable.",
         "Warm": "Friendly and human.",
         "Bold": "Confident, strong statements."
     },
@@ -26,13 +26,13 @@ VOICE_PROFILE = {
         "Conversational": "Make it feel like a chat."
     },
     "generation": {
-        "Gen Alpha (2013–2025)": "Immersed in tech. Intuitive and playful.",
-        "Gen Z (1997–2012)": "Fast, visual, and meme-fluent.",
-        "Millennials (1990–1996)": "Digital-native. Likes social and gamified tone.",
-        "Older Millennials (1981–1989)": "Bridges analog and digital. Values clarity and feedback.",
-        "Gen X (1965–1980)": "Independent and direct. Prefers practical and honest tone.",
-        "Boomers (1946–1964)": "Structured and respectful. Clear value and reliability.",
-        "Mixed / Not Sure": "Blend tone and rhythm across generations. Focus on clarity and personality."
+        "Gen Alpha (b.2013–2025)": "Immersed in tech. Intuitive and playful.",
+        "Gen Z (b.1997–2012)": "Fast, visual, and meme-fluent.",
+        "Millennials (b.1990–1996)": "Digital-native. Likes social and gamified tone.",
+        "Older Millennials (b.1981–1989)": "Bridges analog and digital. Values clarity and feedback.",
+        "Gen X (b.1965–1980)": "Independent and direct. Prefers practical and honest tone.",
+        "Boomers (b.1946–1964)": "Structured and respectful. Clear value and reliability.",
+        "Mixed/Not Sure": "Blend tone and rhythm across generations. Focus on clarity and personality."
     },
     "length": {
         "Short": "Keep content under 100 words",
@@ -56,9 +56,12 @@ def get_sidebar_profile():
         )
         
         return {
-            "communication_style": st.selectbox("Communication Style", list(VOICE_PROFILE["communication_style"].keys())),
-            "content_format": st.selectbox("Content Format", list(VOICE_PROFILE["content_format"].keys())),
-            "generation": st.selectbox("Generation", list(VOICE_PROFILE["generation"].keys())),
+            "communication_style": st.selectbox("Communication Style", list(VOICE_PROFILE["communication_style"].keys()),
+                              index=3), 
+            "content_format": st.selectbox("Content Format", list(VOICE_PROFILE["content_format"].keys()),
+                              index=1),
+            "generation": st.selectbox("Generation", list(VOICE_PROFILE["generation"].keys()),
+                              index=3),
             "length": st.radio("Content Length", 
                              ["Short", "Medium", "Long"],
                              index=1),  # Default to Medium
@@ -139,9 +142,16 @@ if st.session_state.instructions_shown:
     with st.expander("Instructions"):
         st.markdown("""
         ### Welcome to Custom Content AI
-        - Tweak your vibe in the sidebar - that’s where your personality settings live.  
-        - Ready to roll? Drop your request in the chat box below and watch the magic (or mild chaos) unfold.  
-        - Like what you see? Smash that download button before the content disappears into the void.  
+        - Tweak your vibe in the sidebar — that’s where your personality settings live.
+            - **Tone Flair** = This sets the overall voice and attitude. Choose how spicy you want the delivery:
+                - **Nip** keeps it precise and quiet — no noise, just edge.
+                - **Slash** cuts sharp and stylish — think clever with polish.
+                - **Blaze** turns up the drama — bold, direct, and impossible to ignore.
+            - **Communication Style** = What kind of tone feels like you? (Direct, Witty, Encouraging, etc.)
+            - **Content Format** = How do you like your info delivered? (Quick Summary, Action List, etc.)
+            - **Generation** = What pace and cultural filter works best for you? (Pick one — or choose Mixed if you’re a crossover soul.)
+        - Ready to roll? Drop your request in the chat box below and watch the magic (or mild chaos) unfold.
+        - Like what you see? Smash that download button before the content disappears into the void.
         - One query gets you one result. Copy or download it before it vanishes into the ether.
         """)
 
