@@ -253,9 +253,8 @@ if st.session_state.last_response:
     st.markdown(f"**Original Request:** _{st.session_state.last_prompt}_")
     st.markdown(st.session_state.last_response)
 
-    # Add button to reuse last prompt
-if st.button("↩️ Reuse Last Prompt"):
-    # Re-run the generation with last_prompt
+# --- Optional reuse of last prompt ---
+if st.button("↩️ Reuse Last Prompt") and st.session_state.last_prompt:
     system_msg = {"role": "system", "content": build_hidden_instructions(profile)}
     response = client.chat.completions.create(
         model="gpt-4",
@@ -264,17 +263,19 @@ if st.button("↩️ Reuse Last Prompt"):
     content = response.choices[0].message.content
     st.session_state.last_response = content
 
- if st.session_state.last_response:
+# --- Show last response if available ---
+if st.session_state.last_response:
     st.markdown(f"**Original Request:** _{st.session_state.last_prompt}_")
     st.markdown(st.session_state.last_response)
 
-    # Download buttons
+    # Download as text
     st.download_button(
         label="📥 Download txt file",
         data=st.session_state.last_response,
         file_name="AI Writing.md"
     )
 
+    # Export as Word doc
     doc = Document()
     doc.add_heading("Your AI Writing", level=1)
     doc.add_paragraph(st.session_state.last_response)
@@ -288,6 +289,7 @@ if st.button("↩️ Reuse Last Prompt"):
             file_name=word_file,
             mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         )
+
           
 
 
