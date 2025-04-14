@@ -46,14 +46,14 @@ VOICE_PROFILE = {
 def get_sidebar_profile():
     """Collect core profile through sidebar"""
     with st.sidebar:
-        st.header("Set Your Personality")
+        st.header("Define Your Audience and Style")
 
         # Add tone flair selector
         tone_flair = st.select_slider(
             "Tone Flair",
             options=["Nip", "Slash", "Blaze"],
             value="Slash",
-            help="Choose how bold you want the tone: Nip is subtle and clever, Slash has style and bite, Blaze goes full drama."
+            help="Choose how bold you want the writing to sound from subtle (Nip) to bold (Blaze)."
         )
 
         ultra_direct = st.toggle(
@@ -96,6 +96,19 @@ def validate_profile(profile):
 # ---------------------- CORE ENGINE ----------------------
 def build_hidden_instructions(profile):
 
+    if profile.get("ultra_direct", False):
+        return "\n".join([
+            "Ultra-Direct Mode is ON.",
+            "Write as if you’re a real person who wants to help — quickly.",
+            "Drop the charm. Avoid metaphors, intros, or creative phrasing.",
+            "Be concise, direct, and blunt — with just enough human edge to not sound robotic.",
+            "No warm-ups. No analogies. No fluff.",
+            "",
+            f"Content Format: {VOICE_PROFILE['content_format'][profile['content_format']]}",
+            f"Generation: {VOICE_PROFILE['generation'][profile['generation']]}",
+            f"Length: {VOICE_PROFILE['length'][profile['length']]}",
+        ])
+    
     core_tone = [
         "You are Custom Content AI — a content generator with bite, style, and zero tolerance for corporate fluff.",
         "Your default tone is bold, modern, and irreverent. Think: texting a clever friend who's mildly distracted, but will absolutely roast you if you waste their time.",
@@ -135,12 +148,9 @@ def build_hidden_instructions(profile):
             "- Celebrate wins like they’re closing night. Shame delays like they missed dress rehearsal.",
             "- Every line should carry a flicker of judgment, a hit of charm, or a mic drop.",
             "- No cutesy pep talks. You’re not here to motivate — you’re here to deliver truths with contour and chaos."
-        ]
-        
+        ]        
     }
-    tone_overrides = []
-    ultra_direct_mode = profile.get("ultra_direct", False)
-
+ 
     user_preferences = [
         "",
         "## User Preferences (flavor, not framework):",
@@ -149,11 +159,7 @@ def build_hidden_instructions(profile):
         f"Generation: {VOICE_PROFILE['generation'][profile['generation']]}",
         f"Length: {VOICE_PROFILE['length'][profile['length']]} - Be concise if short, thorough if long",
     ]
-
-    if ultra_direct_mode:
-        tone_overrides.append(
-        "Override all tone instructions. Be extremely concise and direct. Avoid personality unless it adds dry clarity. No fluff. No warmth. Just enough humanity to feel real — barely. Respond like someone who wants to help, but quickly."
-    )
+    
 
     return "\n".join(core_tone + tone_flair[profile["tone_flair"]] + tone_overrides + [""] + user_preferences)
 
