@@ -84,7 +84,6 @@ def build_hidden_instructions(profile):
         f"Length: {VOICE_PROFILE['length'][profile['length']]} - Be concise if short, thorough with bullet points if long",
          "Write like you're texting a mildly distracted friend—keep it clear, casual, and charming.",
          "Be smart-funny with a little sass. If it sounds like it belongs in a beige cardigan, rewrite it.",
-         "Use metaphors or pop culture references that make people smirk—not cringe.",
          "Avoid big words and formal tone—this isn’t a TED Talk or a bank chatbot.",
          "Do *not* use 'YOLO' or anything that feels like it belongs on a motivational poster.",
          "Keep instructions helpful but relaxed—more 'here’s how not to mess this up' than 'class is in session'.",
