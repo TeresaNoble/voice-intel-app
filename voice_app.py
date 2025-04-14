@@ -226,7 +226,6 @@ if st.session_state.instructions_shown:
 profile = get_sidebar_profile()
 st.session_state.profile = profile
 
-# Chat Interface
 # Chat interface and response rendering
 if "last_prompt" not in st.session_state:
     st.session_state.last_prompt = ""
@@ -235,23 +234,21 @@ if "last_response" not in st.session_state:
 
 prompt = st.chat_input("What are we writing?")
 
-if prompt:
+if prompt := st.chat_input("What are you writing?"):
     st.session_state.instructions_shown = False
     st.session_state.last_prompt = prompt
+    st.session_state.last_response = ""  # ✅ Clear last response before generating new one
 
+    # Generate content
     system_msg = {"role": "system", "content": build_hidden_instructions(profile)}
     response = client.chat.completions.create(
         model="gpt-4",
         messages=[system_msg, {"role": "user", "content": prompt}]
     )
 
+    # Save and display response
     content = response.choices[0].message.content
     st.session_state.last_response = content
-
-# Display last result
-if st.session_state.last_response:
-    st.markdown(f"**Original Request:** _{st.session_state.last_prompt}_")
-    st.markdown(st.session_state.last_response)
 
 # --- Optional reuse of last prompt ---
 if st.button("↩️ Reuse Last Prompt") and st.session_state.last_prompt:
@@ -266,7 +263,8 @@ if st.button("↩️ Reuse Last Prompt") and st.session_state.last_prompt:
 # --- Show last response if available ---
 if st.session_state.last_response:
     st.markdown(f"**Original Request:** _{st.session_state.last_prompt}_")
-    st.markdown(st.session_state.last_response)
+    with st.chat_message("assistant"):
+        st.markdown(st.session_state.last_response)
 
     # Download as text
     st.download_button(
