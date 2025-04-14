@@ -301,3 +301,13 @@ if st.session_state.last_response:
 for msg in st.session_state.get("messages", []):
     with st.chat_message(msg["role"]):
         st.write(msg["content"])
+
+# Render disclaimer visually at the bottom of the screen
+st.markdown(
+    """
+    <div style="position: fixed; bottom: 10px; left: 20px; font-size: 0.85rem; color: grey;">
+        🔓 <b>Not a vault.</b> This is an AI writing tool, not a diary. Don’t share anything sensitive, secret, or scandalous.
+    </div>
+    """,
+    unsafe_allow_html=True
+)
