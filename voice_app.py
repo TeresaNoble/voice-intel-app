@@ -9,7 +9,7 @@ client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 # ---------------------- COMPLETE VOICE PROFILE ----------------------
 VOICE_PROFILE = {
     "messaging_style": {
-        help="Choose how bold you want the tone: Nip is subtle and clever, Slash has style and bite, Blaze goes full drama."
+        help="Choose how bold you want the tone: Nip is subtle and clever, Slash has style and bite, Blaze goes full drama.",
         "Straight Talker": "Clear, efficient, and no-nonsense. Prioritizes action over explanation.",
         "Storyteller": "Uses metaphors, anecdotes, and emotion to engage. Great for persuasion and empathy.",
         "Cheerleader": "Upbeat, encouraging, and motivating. Offers positive reinforcement and optimism.",
