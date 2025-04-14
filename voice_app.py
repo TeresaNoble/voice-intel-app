@@ -95,7 +95,8 @@ def validate_profile(profile):
 
 # ---------------------- CORE ENGINE ----------------------
 def build_hidden_instructions(profile):
-        
+    tone_overrides = []
+    
     if profile.get("ultra_direct", False):
         return "\n".join([
             "Ultra-Direct Mode is ON.",
@@ -108,8 +109,6 @@ def build_hidden_instructions(profile):
             f"Generation: {VOICE_PROFILE['generation'][profile['generation']]}",
             f"Length: {VOICE_PROFILE['length'][profile['length']]}",
         ])
-
-        tone_overrides = []
 
     if profile["tone_flair"] == "Blaze" and profile["communication_style"] in ["Professional", "Direct"]:
         return "\n".join([
