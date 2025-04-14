@@ -27,7 +27,7 @@ VOICE_PROFILE = {
     },
     "generation": {
         "Gen Alpha (b.2013–2025)": "Immersed in tech. Intuitive and playful.",
-        "Gen Z (b.1997–2012)": "Fast, visual, and meme-fluent.",
+        "Gen Z (b.1997–2012)": "Fast, visual, and meme-fluent. Include emojis.",
         "Millennials (b.1990–1996)": "Digital-native. Likes social and gamified tone.",
         "Wise Millennials (b.1981–1989)": "Bridges analog and digital. Values clarity and feedback.",
         "Gen X (b.1965–1980)": "Independent and direct. Prefers practical and honest tone.",
@@ -55,25 +55,33 @@ def get_sidebar_profile():
             value="Slash",
             help="Choose how bold you want the tone: Nip is subtle and clever, Slash has style and bite, Blaze goes full drama."
         )
+
+        ultra_direct = st.toggle(
+            "Ultra-Direct Mode",
+            value=False,
+            help="Override all personality settings to deliver sharp, efficient content with minimal tone."
+        )
+
         
         return {
             "communication_style": st.selectbox("Preferred Communication Style", list(VOICE_PROFILE["communication_style"].keys()),
                               index=3,
-                              help="How your audience prefers to be spoken to"
+                              help="Think, 'If I was my audience, how would I like to be spoken to?'"
             ),
             "content_format": st.selectbox("Content Format", list(VOICE_PROFILE["content_format"].keys()),
                               index=1,
-                              help="Pick the format that fits how your audience processes content"
+                              help="What are we going with today, detailed, chatty, action?"
             ),
             "generation": st.selectbox("Audience Generation", list(VOICE_PROFILE["generation"].keys()),
                               index=7,
-                              help="This adjusts tone pacing, references, and formality based on the *reader's* generation."
+                              help="This adjusts tone pacing, references, and formality."
             ),
             "length": st.radio("Content Length", 
                              ["Short", "Medium", "Long"],
                              index=1
             ),  # Default to Medium
-            "tone_flair": tone_flair  # Include tone_flair in the returned profile
+            "tone_flair": tone_flair,  # Include tone_flair in the returned profile
+            "ultra_direct": ultra_direct
         }
 
 def validate_profile(profile):
@@ -87,6 +95,7 @@ def validate_profile(profile):
 
 # ---------------------- CORE ENGINE ----------------------
 def build_hidden_instructions(profile):
+
     core_tone = [
         "You are Custom Content AI — a content generator with bite, style, and zero tolerance for corporate fluff.",
         "Your default tone is bold, modern, and irreverent. Think: texting a clever friend who's mildly distracted, but will absolutely roast you if you waste their time.",
@@ -127,7 +136,11 @@ def build_hidden_instructions(profile):
             "- Every line should carry a flicker of judgment, a hit of charm, or a mic drop.",
             "- No cutesy pep talks. You’re not here to motivate — you’re here to deliver truths with contour and chaos."
         ]
+        
     }
+    tone_overrides = []
+    ultra_direct_mode = profile.get("ultra_direct", False)
+
     user_preferences = [
         "",
         "## User Preferences (flavor, not framework):",
@@ -136,7 +149,13 @@ def build_hidden_instructions(profile):
         f"Generation: {VOICE_PROFILE['generation'][profile['generation']]}",
         f"Length: {VOICE_PROFILE['length'][profile['length']]} - Be concise if short, thorough if long",
     ]
-    return "\n".join(core_tone + tone_flair[profile["tone_flair"]] + user_preferences)
+
+    if ultra_direct_mode:
+    tone_overrides.append(
+        "Override all tone instructions. Be extremely concise and direct. Avoid personality unless it adds dry clarity. No fluff. No warmth. Just enough humanity to feel real — barely. Respond like someone who wants to help, but quickly."
+    )
+
+    return "\n".join(core_tone + tone_flair[profile["tone_flair"]] + tone_overrides + [""] user_preferences)
 
 # ---------------------- STREAMLIT APP ----------------------
 st.set_page_config(page_title="Custom Content AI", layout="wide")
@@ -150,14 +169,14 @@ if st.session_state.instructions_shown:
     with st.expander("Instructions"):
         st.markdown("""
         ### Welcome to Custom Content AI
-        - This is your content styling lab. You bring the message and we’ll help you shape it to hit right.
-            - **Tone Flair** = This sets the overall voice and attitude. Choose how spicy you want the delivery:
-                - **Nip** keeps it precise and quiet — no noise, just edge.
-                - **Slash** cuts sharp and stylish — think clever with polish.
-                - **Blaze** turns up the drama — bold, direct, and impossible to ignore.
-            - **Communication Style** = Choose the vibe your audience responds to — Direct, Warm, Bold, etc.
-            - **Content Format** = Do they want a summary, a list, a breakdown? Pick how the information should land.
-            - **Generation** = Select the generation the content is meant for. This adjusts rhythm, pacing, references, and tone fluency. (Pick one — or choose Mixed if you’re a crossover soul.)
+        ## This is your content styling lab. You bring the message and we’ll help you shape it to hit right.
+            - **Tone Flair** This sets the overall attitude:
+                - **Nip** keeps it precise and edgy.
+                - **Slash** cuts sharp and stylish.
+                - **Blaze** bold, direct, and impossible to ignore.
+            - **Communication Style** Choose your audiences general communication vibe.
+            - **Content Format** How should the content appear in its final form as?
+            - **Generation** Pick the closest match for your audience or choose Mixed if you’re a crossover soul.
         - Ready to roll? Drop your request in the chat box below and watch the magic (or mild chaos) unfold.
         - Like what you see? Smash that download button before the content disappears into the void.
         - One query gets you one result. Copy or download it before it vanishes into the ether.
