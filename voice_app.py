@@ -29,10 +29,11 @@ VOICE_PROFILE = {
         "Gen Alpha (b.2013–2025)": "Immersed in tech. Intuitive and playful.",
         "Gen Z (b.1997–2012)": "Fast, visual, and meme-fluent.",
         "Millennials (b.1990–1996)": "Digital-native. Likes social and gamified tone.",
-        "Older Millennials (b.1981–1989)": "Bridges analog and digital. Values clarity and feedback.",
+        "Wise Millennials (b.1981–1989)": "Bridges analog and digital. Values clarity and feedback.",
         "Gen X (b.1965–1980)": "Independent and direct. Prefers practical and honest tone.",
         "Boomers (b.1946–1964)": "Structured and respectful. Clear value and reliability.",
-        "Mixed/Not Sure": "Blend tone and rhythm across generations. Focus on clarity and personality."
+        "Silent Generation (1928–1945)": "Formal, respectful, and rooted in tradition. Responds to clarity, courtesy, and structured messaging.",
+        "Mixed": "Blend tone and rhythm across generations. Focus on clarity and personality."
     },
     "length": {
         "Short": "Keep content under 100 words",
@@ -45,7 +46,7 @@ VOICE_PROFILE = {
 def get_sidebar_profile():
     """Collect core profile through sidebar"""
     with st.sidebar:
-        st.header("Profile Settings")
+        st.header("Set Your Personality")
 
         # Add tone flair selector
         tone_flair = st.select_slider(
@@ -56,15 +57,22 @@ def get_sidebar_profile():
         )
         
         return {
-            "communication_style": st.selectbox("Communication Style", list(VOICE_PROFILE["communication_style"].keys()),
-                              index=3), 
+            "communication_style": st.selectbox("Preferred Communication Style", list(VOICE_PROFILE["communication_style"].keys()),
+                              index=3,
+                              help="How your audience prefers to be spoken to"
+            ),
             "content_format": st.selectbox("Content Format", list(VOICE_PROFILE["content_format"].keys()),
-                              index=1),
-            "generation": st.selectbox("Generation", list(VOICE_PROFILE["generation"].keys()),
-                              index=3),
+                              index=1,
+                              help="Pick the format that fits how your audience processes content"
+            ),
+            "generation": st.selectbox("Audience Generation", list(VOICE_PROFILE["generation"].keys()),
+                              index=7,
+                              help="This adjusts tone pacing, references, and formality based on the *reader's* generation."
+            ),
             "length": st.radio("Content Length", 
                              ["Short", "Medium", "Long"],
-                             index=1),  # Default to Medium
+                             index=1
+            ),  # Default to Medium
             "tone_flair": tone_flair  # Include tone_flair in the returned profile
         }
 
@@ -142,14 +150,14 @@ if st.session_state.instructions_shown:
     with st.expander("Instructions"):
         st.markdown("""
         ### Welcome to Custom Content AI
-        - Tweak your vibe in the sidebar — that’s where your personality settings live.
+        - This is your content styling lab. You bring the message and we’ll help you shape it to hit right.
             - **Tone Flair** = This sets the overall voice and attitude. Choose how spicy you want the delivery:
                 - **Nip** keeps it precise and quiet — no noise, just edge.
                 - **Slash** cuts sharp and stylish — think clever with polish.
                 - **Blaze** turns up the drama — bold, direct, and impossible to ignore.
-            - **Communication Style** = What kind of tone feels like you? (Direct, Witty, Encouraging, etc.)
-            - **Content Format** = How do you like your info delivered? (Quick Summary, Action List, etc.)
-            - **Generation** = What pace and cultural filter works best for you? (Pick one — or choose Mixed if you’re a crossover soul.)
+            - **Communication Style** = Choose the vibe your audience responds to — Direct, Warm, Bold, etc.
+            - **Content Format** = Do they want a summary, a list, a breakdown? Pick how the information should land.
+            - **Generation** = Select the generation the content is meant for. This adjusts rhythm, pacing, references, and tone fluency. (Pick one — or choose Mixed if you’re a crossover soul.)
         - Ready to roll? Drop your request in the chat box below and watch the magic (or mild chaos) unfold.
         - Like what you see? Smash that download button before the content disappears into the void.
         - One query gets you one result. Copy or download it before it vanishes into the ether.
