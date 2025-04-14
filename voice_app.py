@@ -62,6 +62,13 @@ def get_sidebar_profile():
             help="Override all personality settings to deliver sharp, efficient content with minimal tone."
         )
 
+                # Spacer to push disclaimer to the bottom
+        st.markdown("---")
+        st.markdown(
+            "🔓 *Not a vault.* This is an AI writing tool, not a diary. Don’t share anything sensitive, secret, or scandalous.",
+            unsafe_allow_html=True
+        )
+
         
         return {
             "communication_style": st.selectbox("Preferred Communication Style", list(VOICE_PROFILE["communication_style"].keys()),
@@ -233,17 +240,11 @@ if "last_prompt" not in st.session_state:
 if "last_response" not in st.session_state:
     st.session_state.last_response = ""
 
-disclaimer_placeholder = st.empty()
-
 if prompt := st.chat_input("What are you writing?"):
     st.session_state.instructions_shown = False
     st.session_state.last_prompt = prompt
     st.session_state.last_response = ""  # ✅ Clear last response before generating new one
 
-    disclaimer_placeholder.markdown(
-    "🔓 *Not a vault.* This is an AI writing tool, not a diary. Don’t share anything sensitive, secret, or scandalous.",
-    unsafe_allow_html=True
-)
     # Generate content
     system_msg = {"role": "system", "content": build_hidden_instructions(profile)}
     response = client.chat.completions.create(
@@ -293,21 +294,9 @@ if st.session_state.last_response:
             mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         )
 
-          
-
-
+       
 
 # Display conversation history
 for msg in st.session_state.get("messages", []):
     with st.chat_message(msg["role"]):
         st.write(msg["content"])
-
-# Render disclaimer visually at the bottom of the screen
-st.markdown(
-    """
-    <div style="position: fixed; bottom: 10px; left: 20px; font-size: 0.85rem; color: grey;">
-        🔓 <b>Not a vault.</b> This is an AI writing tool, not a diary. Don’t share anything sensitive, secret, or scandalous.
-    </div>
-    """,
-    unsafe_allow_html=True
-)
