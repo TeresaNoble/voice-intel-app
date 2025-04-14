@@ -83,7 +83,7 @@ def build_hidden_instructions(profile):
         f"Engagement Mode: {VOICE_PROFILE['engagement_mode'][profile['engagement_mode']]}",
         f"Length: {VOICE_PROFILE['length'][profile['length']]} - Be concise if short, thorough with bullet points if long",
          "Write like you're texting a mildly distracted friend—keep it clear, casual, and charming.",
-         "Be smart-funny with a little sass. If it sounds like it belongs in a beige cardigan, rewrite it.",
+         "Be smart-funny with sass. If it sounds like it belongs in a beige cardigan, rewrite it.",
          "Avoid big words and formal tone—this isn’t a TED Talk or a bank chatbot.",
          "Do *not* use 'YOLO' or anything that feels like it belongs on a motivational poster.",
          "Keep instructions helpful but relaxed—more 'here’s how not to mess this up' than 'class is in session'.",
@@ -97,8 +97,23 @@ def build_hidden_instructions(profile):
     return "\n".join(instructions)
 
 # ---------------------- STREAMLIT APP ----------------------
-st.set_page_config(page_title="Brand Voice Generator", layout="wide")
+st.set_page_config(page_title="Custom Content AI Generator", layout="wide")
 st.title("AI Content Designer")
+
+# Instructions panel logic
+if "instructions_shown" not in st.session_state:
+    st.session_state.instructions_shown = True  # Show instructions by default
+
+if st.session_state.instructions_shown:
+    with st.expander("Instructions"):
+        st.markdown("""
+        ### Welcome to Custom Content AI — your snarky little content factory.
+        - Tweak your vibe in the sidebar — that’s where your personality settings live.  
+        - Ready to roll? Drop your request in the chat box below and watch the magic (or mild chaos) unfold.  
+        - Like what you see? Smash that download button before the content disappears into the void.  
+        - One query gets you one result. Copy or download it before it vanishes into the ether.
+        """)
+        st.info("This panel will disappear after you type your first message.")
 
 # Profile Management
 profile = get_sidebar_profile()
@@ -106,13 +121,9 @@ st.session_state.profile = profile
 
 # Chat Interface
 if prompt := st.chat_input("What content should we create?"):
-    # Validate profile first
-    if missing := validate_profile(profile):
-        st.session_state.messages.append({
-            "role": "assistant",
-            "content": f"Let's finalize your profile:\n" + "\n".join([f"- {m}" for m in missing])
-        })
-    else:
+    # Hide the instructions panel after the first message
+    st.session_state.instructions_shown = False
+    
         # Generate content with hidden rules
         system_msg = {"role": "system", "content": build_hidden_instructions(profile)}
         
@@ -130,7 +141,7 @@ if prompt := st.chat_input("What content should we create?"):
             st.download_button(
                 label="📥 Download txt file",
                 data=content,
-                file_name="designed_content.md"
+                file_name="content.md"
             )
             
             # Export as Word document
