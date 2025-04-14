@@ -252,9 +252,9 @@ if prompt := st.chat_input("What are we writing?"):
         content = response.choices[0].message.content
         st.write(content)
 
-     if st.session_state.last_response:
-        st.markdown(f"**Original Request:** _{st.session_state.last_prompt}_")
-        st.markdown(st.session_state.last_response)
+if st.session_state.last_response:
+    st.markdown(f"**Original Request:** _{st.session_state.last_prompt}_")
+    st.markdown(st.session_state.last_response)
 
     # Download as text
     st.download_button(
