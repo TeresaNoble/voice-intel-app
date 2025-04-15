@@ -56,7 +56,7 @@ def get_sidebar_profile():
     uploaded_file = st.sidebar.file_uploader("Upload a reference doc", type=["txt", "pdf", "docx"])
     reference_text = extract_text_from_file(uploaded_file) if uploaded_file else ""
 
-    """Collect core profile through sidebar"""
+    """Update output settings through sidebar on left."""
     with st.sidebar:
         st.header("Define Your Audience and Style")
 
@@ -65,7 +65,7 @@ def get_sidebar_profile():
             "Tone Flair",
             options=["Nip", "Slash", "Blaze"],
             value="Slash",
-            help="Choose how bold you want the writing to sound from subtle (Nip) to bold (Blaze)."
+            help="Choose how bold you want the writing to sound: Subtly edgy (Nip), sharp but stylish (Slash) or bold and direct (Blaze)."
         )
 
         ultra_direct = st.toggle(
@@ -221,7 +221,7 @@ def build_hidden_instructions(profile):
     return "\n".join(core_tone + tone_flair[profile["tone_flair"]] + tone_overrides + [""] + user_preferences)
 
 # ---------------------- STREAMLIT APP ----------------------
-st.set_page_config(page_title="Custom Content AI", layout="wide")
+st.set_page_config(page_title="Custom Content AI", layout="normal")
 st.title("AI Writing Assistant")
 st.markdown(
     "This tool helps you write any message fast.",
@@ -237,17 +237,17 @@ if st.session_state.instructions_shown:
     with st.expander("Instructions"):
         st.markdown("""
         **How It Works**
-        Let me know your audience in the sidebar, then type your message idea below. This could be:
+        Let me know your audience and perhaps a file to reference in the sidebar, then type your message idea below. This could be:
         - A short email to your boss  
         - A Slack announcement for your team  
-        - An explainer for a doc or workflow  
-        - Even a birthday card line (no judgement)
+        - An explainer for a doc  
+        - Even a birthday card line for your dog groomers aunt
         
         **What the settings mean:**
         - **Tone Flair** – This sets the overall attitude:
-          &nbsp;&nbsp;- **Nip** keeps it precise and edgy  
-          &nbsp;&nbsp;- **Slash** cuts sharp and stylish  
-          &nbsp;&nbsp;- **Blaze** bold, direct, and impossible to ignore  
+          &nbsp;&nbsp; - **Nip** keeps it precise and edgy  
+          &nbsp;&nbsp; - **Slash** cuts sharp and stylish  
+          &nbsp;&nbsp; - **Blaze** bold, direct, and impossible to ignore  
         - **Communication Style** – Choose your audience's preferred tone
         - **Content Format** – Should it be chatty, listy, or structured?
         - **Generation** – Choose the closest match for your reader (or 'Mixed')
@@ -272,14 +272,18 @@ if prompt := st.chat_input("What are you writing?"):
 
     # Generate content
     system_msg = {"role": "system", "content": build_hidden_instructions(profile)}
-    response = client.chat.completions.create(
-        model="gpt-4",
-        messages=[system_msg, {"role": "user", "content": prompt}]
-    )
+    
+    with st.spinner("Stirring the sass…"):
+        response = client.chat.completions.create(
+            model="gpt-4",
+            messages=[system_msg, {"role": "user", "content": prompt}]
+        )
 
-    # Save and display response
-    content = response.choices[0].message.content
-    st.session_state.last_response = content
+        # Save and display response
+        content = response.choices[0].message.content
+        st.session_state.last_response = content
+
+   st.success("Here's your masterpiece.")
 
 # --- Optional reuse of last prompt ---
 if st.button("↩️ Reuse Last Prompt") and st.session_state.last_prompt:
