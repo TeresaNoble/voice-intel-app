@@ -221,7 +221,7 @@ def build_hidden_instructions(profile):
     return "\n".join(core_tone + tone_flair[profile["tone_flair"]] + tone_overrides + [""] + user_preferences)
 
 # ---------------------- STREAMLIT APP ----------------------
-st.set_page_config(page_title="Custom Content AI", layout="normal")
+st.set_page_config(page_title="Custom Content AI", layout="centered")
 st.title("AI Writing Assistant")
 st.markdown(
     "This tool helps you write any message fast.",
