@@ -1,7 +1,8 @@
 import streamlit as st
 from openai import OpenAI
 import json
-from docx import Document  # Import for Word document creation
+from docx import Document as DocxDocument  # To avoid conflict with Word export
+from PyPDF2 import PdfReader
 
 # Initialize OpenAI client
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
@@ -49,7 +50,11 @@ def get_sidebar_profile():
     def get_sidebar_profile():
         logo = Image.open("assets/logo2.png")
         st.sidebar.image(logo, width=50, use_container_width=False)
-    
+
+
+    uploaded_file = st.sidebar.file_uploader("Upload a reference doc", type=["txt", "pdf", "docx"])
+    reference_text = extract_text_from_file(uploaded_file) if uploaded_file else ""
+
         """Collect core profile through sidebar"""
     with st.sidebar:
         st.header("Define Your Audience and Style")
@@ -87,7 +92,8 @@ def get_sidebar_profile():
                              index=1
             ),  # Default to Medium
             "tone_flair": tone_flair,  # Include tone_flair in the returned profile
-            "ultra_direct": ultra_direct
+            "ultra_direct": ultra_direct,
+            "reference_text": reference_text 
         }      
 
 def validate_profile(profile):
@@ -101,6 +107,21 @@ def validate_profile(profile):
 
 if "last_response" not in st.session_state:
     st.session_state.last_response = ""
+
+def extract_text_from_file(uploaded_file):
+    if uploaded_file.name.endswith(".txt"):
+        return uploaded_file.read().decode("utf-8")
+
+    elif uploaded_file.name.endswith(".pdf"):
+        reader = PdfReader(uploaded_file)
+        return "\n".join([page.extract_text() or "" for page in reader.pages])
+
+    elif uploaded_file.name.endswith(".docx"):
+        doc = DocxDocument(uploaded_file)
+        return "\n".join([para.text for para in doc.paragraphs])
+
+    return ""
+
 
 
 # ---------------------- CORE ENGINE ----------------------
@@ -189,7 +210,12 @@ def build_hidden_instructions(profile):
         f"Generation: {VOICE_PROFILE['generation'][profile['generation']]}",
         f"Length: {VOICE_PROFILE['length'][profile['length']]} - Be concise if short, thorough if long",
     ]
-    
+
+    if profile.get("reference_text"):
+        user_preferences.append(
+            "\n## Reference Material Provided:\n" + profile["reference_text"][:2000]  # Truncate if long
+        )
+
 
     return "\n".join(core_tone + tone_flair[profile["tone_flair"]] + tone_overrides + [""] + user_preferences)
 
@@ -227,7 +253,6 @@ if st.session_state.instructions_shown:
                 
         Once you type your message idea below, I’ll rewrite it for your audience, or it'll be something you can be inspired by!
         """, unsafe_allow_html=True)
-
 
 # Profile Management
 profile = get_sidebar_profile()
