@@ -55,7 +55,7 @@ def get_sidebar_profile():
     uploaded_file = st.sidebar.file_uploader("Upload a reference doc", type=["txt", "pdf", "docx"])
     reference_text = extract_text_from_file(uploaded_file) if uploaded_file else ""
 
-        """Collect core profile through sidebar"""
+    """Collect core profile through sidebar"""
     with st.sidebar:
         st.header("Define Your Audience and Style")
 
