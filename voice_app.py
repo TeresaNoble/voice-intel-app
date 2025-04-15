@@ -46,8 +46,9 @@ VOICE_PROFILE = {
 def get_sidebar_profile():
     from PIL import Image
 
-    st.image("assets/logo1.webp", width=50)
-    st.sidebar.image(logo1, use_container_width=False)
+def get_sidebar_profile():
+    logo1 = Image.open("assets/logo1.webp")
+    st.sidebar.image(logo1, width=50, use_container_width=False)
     
     """Collect core profile through sidebar"""
     with st.sidebar:
