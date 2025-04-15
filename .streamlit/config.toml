@@ -1,0 +1,7 @@
+[theme]
+base="light"
+primaryColor="#556B2F"  # olive green
+backgroundColor="#FAF3E0"  # sand
+secondaryBackgroundColor="#F5EAD2"  # lighter sand
+textColor="#000000"  # black
+font="sans serif"
