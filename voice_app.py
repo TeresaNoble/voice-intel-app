@@ -1,7 +1,6 @@
 import streamlit as st
 from openai import OpenAI
 import json
-from docx import Document
 from docx import Document as DocxDocument  # To avoid conflict with Word export
 from PyPDF2 import PdfReader
 from datetime import datetime
