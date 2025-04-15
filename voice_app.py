@@ -144,7 +144,7 @@ def build_hidden_instructions(profile):
         ref_block = "\n## Reference Material Provided:\n" + profile["reference_text"][:2000]
     
     if profile.get("ultra_direct", False):
-        return "\n".join([
+        content = [
             "Ultra-Direct Mode is ON.",
             "Write as if you’re a real person who wants to help — quickly.",
             "Drop the charm. Avoid metaphors, intros, or creative phrasing.",
@@ -155,11 +155,12 @@ def build_hidden_instructions(profile):
             f"Content Format: {VOICE_PROFILE['content_format'][profile['content_format']]}",
             f"Generation: {VOICE_PROFILE['generation'][profile['generation']]}",
             f"Length: {VOICE_PROFILE['length'][profile['length']]}",
+            ref_block
         ]
         return "\n".join(content)
 
     if profile["tone_flair"] == "Blaze" and profile["communication_style"] in ["Professional", "Direct"]:
-        return "\n".join([
+        content = [
             "Blaze Mode — Executive edition.",
             "Tone must be bold, direct, and human. Skip metaphors, branded sign-offs, or dramatic flourishes.",
             "Keep sentences short. Prioritize frictionless clarity with a confident edge.",
@@ -169,6 +170,7 @@ def build_hidden_instructions(profile):
             f"Content Format: {VOICE_PROFILE['content_format'][profile['content_format']]}",
             f"Generation: {VOICE_PROFILE['generation'][profile['generation']]}",
             f"Length: {VOICE_PROFILE['length'][profile['length']]}",
+            ref_block
         ]
         return "\n".join(content)
     
@@ -226,6 +228,7 @@ def build_hidden_instructions(profile):
         f"Content Format: {VOICE_PROFILE['content_format'][profile['content_format']]}",
         f"Generation: {VOICE_PROFILE['generation'][profile['generation']]}",
         f"Length: {VOICE_PROFILE['length'][profile['length']]} - Be concise if short, thorough if long",
+        ref_block
     ]
 
     if profile.get("reference_text"):
