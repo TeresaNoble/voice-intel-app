@@ -50,10 +50,10 @@ def get_sidebar_profile():
     from PIL import Image, UnidentifiedImageError
 
     try:
-    logo = Image.open("assets/logo2.png")
-    st.sidebar.image(logo, width=50, use_container_width=False)
-except (FileNotFoundError, UnidentifiedImageError):
-    st.sidebar.warning("Logo not found. Proceeding without it.")
+        logo = Image.open("assets/logo2.png")
+        st.sidebar.image(logo, width=50, use_container_width=False)
+    except (FileNotFoundError, UnidentifiedImageError):
+        st.sidebar.warning("Logo not found. Proceeding without it.")
 
     uploaded_file = st.sidebar.file_uploader(
         "Upload a reference doc. AI is not secure, don't upload secrets or scandals.", 
