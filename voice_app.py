@@ -4,6 +4,8 @@ import json
 from docx import Document
 from docx import Document as DocxDocument  # To avoid conflict with Word export
 from PyPDF2 import PdfReader
+from datetime import datetime
+import re
 
 # Initialize OpenAI client
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
@@ -53,7 +55,7 @@ def get_sidebar_profile():
         st.sidebar.image(logo, width=50, use_container_width=False)
 
 
-    uploaded_file = st.sidebar.file_uploader("Upload a reference doc", type=["txt", "pdf", "docx"])
+    uploaded_file = st.sidebar.file_uploader("Upload a reference doc. AI is not secure, don't upload secrets or scandals.", type=["txt", "pdf", "docx"])
     reference_text = extract_text_from_file(uploaded_file) if uploaded_file else ""
 
     """Update output settings through sidebar on left."""
@@ -123,7 +125,12 @@ def extract_text_from_file(uploaded_file):
 
     return ""
 
-
+def generate_filename(prompt: str, ext="docx") -> str:
+    words = re.findall(r'\b\w+\b', prompt.lower())
+    top_two = sorted(words[:2]) if len(words) >= 2 else ["content"]
+    base = "".join(top_two)
+    date_str = datetime.now().strftime("%d%b%Y")  # e.g. 15Apr2025
+    return f"{base}_{date_str}.{ext}"
 
 # ---------------------- CORE ENGINE ----------------------
 def build_hidden_instructions(profile):
@@ -301,25 +308,27 @@ if st.session_state.last_response:
     with st.chat_message("assistant"):
         st.markdown(st.session_state.last_response)
 
+    filename_docx = generate_filename(st.session_state.last_prompt)
+    filename_txt = filename_docx.replace(".docx", ".md")
+    
     # Download as text
     st.download_button(
         label="📥 Download txt file",
         data=st.session_state.last_response,
-        file_name="AI Writing.md"
+        file_name=filename_txt
     )
 
     # Export as Word doc
     doc = Document()
     doc.add_heading("Your AI Writing", level=1)
     doc.add_paragraph(st.session_state.last_response)
-    word_file = "response.docx"
-    doc.save(word_file)
+    doc.save(filename_docx)
 
     with open(word_file, "rb") as file:
         st.download_button(
             label="📥 Download Word file",
             data=file,
-            file_name=word_file,
+            file_name=filename_docx,
             mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         )
 
