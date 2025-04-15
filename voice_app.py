@@ -49,9 +49,8 @@ VOICE_PROFILE = {
 def get_sidebar_profile():
     from PIL import Image
 
-    def get_sidebar_profile():
-        logo = Image.open("assets/logo2.png")
-        st.sidebar.image(logo, width=50, use_container_width=False)
+    logo = Image.open("assets/logo2.png")
+    st.sidebar.image(logo, width=50, use_container_width=False)
 
 
     uploaded_file = st.sidebar.file_uploader("Upload a reference doc. AI is not secure, don't upload secrets or scandals.", type=["txt", "pdf", "docx"])
@@ -278,6 +277,7 @@ if prompt := st.chat_input("What are you writing?"):
 
     # Generate content
     system_msg = {"role": "system", "content": build_hidden_instructions(profile)}
+    print("Calling OpenAI API with prompt:", prompt)
     
     with st.spinner("Stirring the sass…"):
         response = client.chat.completions.create(
@@ -294,6 +294,7 @@ if prompt := st.chat_input("What are you writing?"):
 # --- Optional reuse of last prompt ---
 if st.button("↩️ Reuse Last Prompt") and st.session_state.last_prompt:
     system_msg = {"role": "system", "content": build_hidden_instructions(profile)}
+    print("🔁 Reusing last prompt:", st.session_state.last_prompt)
     response = client.chat.completions.create(
         model="gpt-4",
         messages=[system_msg, {"role": "user", "content": st.session_state.last_prompt}]
@@ -318,12 +319,12 @@ if st.session_state.last_response:
     )
 
     # Export as Word doc
-    doc = Document()
+    doc = DocxDocument()
     doc.add_heading("Your AI Writing", level=1)
     doc.add_paragraph(st.session_state.last_response)
     doc.save(filename_docx)
 
-    with open(word_file, "rb") as file:
+    with open(filename_docx, "rb") as file:
         st.download_button(
             label="📥 Download Word file",
             data=file,
