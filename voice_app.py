@@ -283,7 +283,7 @@ if prompt := st.chat_input("What are you writing?"):
         content = response.choices[0].message.content
         st.session_state.last_response = content
 
-     st.success("Here's your masterpiece.")
+        st.success("Here's your masterpiece.")
 
 # --- Optional reuse of last prompt ---
 if st.button("↩️ Reuse Last Prompt") and st.session_state.last_prompt:
