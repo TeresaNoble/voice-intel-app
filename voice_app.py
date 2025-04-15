@@ -44,6 +44,11 @@ VOICE_PROFILE = {
 
 # ---------------------- PROFILE MANAGEMENT ----------------------
 def get_sidebar_profile():
+from PIL import Image
+
+logo = Image.open("assets/logo1.webp")  # update path as needed
+st.sidebar.image(logo, use_column_width=True)
+    
     """Collect core profile through sidebar"""
     with st.sidebar:
         st.header("Define Your Audience and Style")
@@ -203,14 +208,14 @@ if "instructions_shown" not in st.session_state:
 if st.session_state.instructions_shown:
     with st.expander("Instructions"):
         st.markdown("""
-        ### How It Works
+        **How It Works**
         Let me know your audience in the sidebar, then type your message idea below. This could be:
         - A short email to your boss  
         - A Slack announcement for your team  
         - An explainer for a doc or workflow  
         - Even a birthday card line (no judgement)
         
-        #### What the settings mean:
+        **What the settings mean:**
         - **Tone Flair** – This sets the overall attitude:
           &nbsp;&nbsp;- **Nip** keeps it precise and edgy  
           &nbsp;&nbsp;- **Slash** cuts sharp and stylish  
