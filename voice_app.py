@@ -29,9 +29,9 @@ VOICE_PROFILE = {
         "Conversational": "Make it feel like a chat."
     },
     "generation": {
-        "Gen Alpha (b.2013–2025)": "Immersed in tech. Intuitive and playful.",
+        "Gen Alpha (b.2013–2025)": "Immersed in tech. Intuitive and playful. Include many emojis.",
         "Gen Z (b.1997–2012)": "Fast, visual, and meme-fluent. Include emojis.",
-        "Millennials (b.1990–1996)": "Digital-native. Likes social and gamified tone.",
+        "Millennials (b.1990–1996)": "Digital-native. Likes social and gamified tone. Include a few emojis.",
         "Wise Millennials (b.1981–1989)": "Bridges analog and digital. Values clarity and feedback.",
         "Gen X (b.1965–1980)": "Independent and direct. Prefers practical and honest tone.",
         "Boomers (b.1946–1964)": "Structured and respectful. Clear value and reliability.",
@@ -138,6 +138,10 @@ def generate_filename(prompt: str, ext="docx") -> str:
 # ---------------------- CORE ENGINE ----------------------
 def build_hidden_instructions(profile):
     tone_overrides = []
+
+    ref_block = ""
+    if profile.get("reference_text"):
+        ref_block = "\n## Reference Material Provided:\n" + profile["reference_text"][:2000]
     
     if profile.get("ultra_direct", False):
         return "\n".join([
@@ -151,7 +155,8 @@ def build_hidden_instructions(profile):
             f"Content Format: {VOICE_PROFILE['content_format'][profile['content_format']]}",
             f"Generation: {VOICE_PROFILE['generation'][profile['generation']]}",
             f"Length: {VOICE_PROFILE['length'][profile['length']]}",
-        ])
+        ]
+        return "\n".join(content)
 
     if profile["tone_flair"] == "Blaze" and profile["communication_style"] in ["Professional", "Direct"]:
         return "\n".join([
@@ -164,7 +169,8 @@ def build_hidden_instructions(profile):
             f"Content Format: {VOICE_PROFILE['content_format'][profile['content_format']]}",
             f"Generation: {VOICE_PROFILE['generation'][profile['generation']]}",
             f"Length: {VOICE_PROFILE['length'][profile['length']]}",
-        ])
+        ]
+        return "\n".join(content)
     
     if profile["communication_style"] in ["Professional", "Direct"]:
         tone_overrides.append(
