@@ -5,3 +5,11 @@ backgroundColor="#FAF3E0"  # sand
 secondaryBackgroundColor="#F5EAD2"  # lighter sand
 textColor="#000000"  # black
 font="sans serif"
+
+[server]
+headless = true
+enableStaticServing = true
+
+[ui]
+hideMenu = true
+hideFooter = true
