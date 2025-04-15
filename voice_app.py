@@ -50,7 +50,7 @@ def get_sidebar_profile():
     from PIL import Image
 
     logo = Image.open("assets/logo2.png")
-    st.sidebar.image(logo, width=50, use_container_width=False)
+    st.sidebar.image(logo, width=150, use_container_width=False)
 
     uploaded_file = st.sidebar.file_uploader(
         "Upload a reference doc. AI is not secure, don't upload secrets or scandals.", 
