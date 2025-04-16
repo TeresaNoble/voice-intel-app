@@ -12,20 +12,20 @@ client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 # ---------------------- COMPLETE VOICE PROFILE ----------------------
 VOICE_PROFILE = {
     "communication_style": {
-        "Direct": "No fluff. Just the point.",
-        "Encouraging": "Supportive and constructive.",
-        "Playful": "Cheeky and casual.",
-        "Witty": "Sharp with a hilarious dry English style twist.",
-        "Professional": "Stick to clarity and credibility. Prioritize useful information over personality. Avoid slang, metaphors, and theatrics. Maintain a confident, modern tone — think human, not chatty.",
-        "Warm": "Friendly and human.",
-        "Bold": "Confident, strong statements."
+        "Direct": "No fluff. Just the point. With a CTA.",
+        "Encouraging": "Supportive and constructive. Kind.",
+        "Playful": "Cheeky and casual. No characters or fantasy. Think cristmas cracker with more charm.",
+        "Witty": "Sharp with a hilarious dry English style twist. The Office but only the laugh out loud parts.",
+        "Professional": "Stick to clarity and credibility. Prioritize useful information over personality. Avoid slang, metaphors, and theatrics. Corporate with a CTA.",
+        "Warm": "Friendly and human. Like a soft hug from your favourite Aunt.",
+        "Bold": "Confident, strong statements. If you walk into a room everyone notices."
     },
     "content_format": {
         "Step-by-Step": "Give me a clear numbered sequence.",
-        "Quick Summary": "Just the key points, fast. No waffle.",
-        "Detailed Breakdown": "Explain clearly with depth and reasons.",
-        "Action List": "What do I do next? Give bullet points.",
-        "Analytical": "Back it up with logic.",
+        "Quick Summary": "Just the key points, fast. No waffle. Short sentences.",
+        "Detailed Breakdown": "Explain clearly with depth, reasons, numbered lists and bullet points.",
+        "Action List": "What do I do first and next? Give bullet points.",
+        "Analytical": "Back it up with logic and reasons. Quotes from famous people where appropriate.",
         "Conversational": "Make it feel like a chat."
     },
     "generation": {
@@ -36,7 +36,7 @@ VOICE_PROFILE = {
         "Gen X (b.1965–1980)": "Independent and direct. Prefers practical and honest tone.",
         "Boomers (b.1946–1964)": "Structured and respectful. Clear value and reliability.",
         "Silent Generation (1928–1945)": "Formal, respectful, and rooted in tradition. Responds to clarity, courtesy, and structured messaging.",
-        "Mixed": "Blend tone and rhythm across generations. Focus on clarity and personality."
+        "Mixed": "Blend tone and rhythm across generations. Focus on clarity."
     },
     "length": {
         "Short": "Keep content under 100 words",
@@ -76,7 +76,7 @@ def get_sidebar_profile():
         ultra_direct = st.toggle(
             "Ultra-Direct Mode",
             value=False,
-            help="Override all personality settings to deliver sharp, efficient content with minimal tone."
+            help="Override all personality settings to deliver sharp, efficient content with no tone."
         )
 
        
@@ -146,7 +146,7 @@ def build_hidden_instructions(profile):
     if profile.get("ultra_direct", False):
         content = [
             "Ultra-Direct Mode is ON.",
-            "Write as if you’re a real person who wants to help — quickly.",
+            "Write as if you’re a real person who wants to instruct — quickly.",
             "Drop the charm. Avoid metaphors, intros, or creative phrasing.",
             "Be concise, direct, and blunt — with just enough human edge to not sound robotic.",
             "No warm-ups. No analogies. No fluff.",
@@ -188,7 +188,7 @@ def build_hidden_instructions(profile):
         "Avoid big words and formal tone — this isn’t a TED Talk or a bank chatbot.",
         "Clarity comes first, but don’t sacrifice personality. Think charm over polish.",
         "Stay human, stay cheeky, and never sound like LinkedIn on a Monday."
-        "Do not create themes, characters, metaphors, or narrative devices unless explicitly requested. Avoid turning simple tasks into storytelling. Keep it grounded in real-world language and tone.",
+        "Do not create themes, characters, metaphors, or narrative devices unless explicitly requested. No unicorns or pirates. Avoid turning simple tasks into storytelling. Keep it grounded in real-world language and tone.",
     ]
 
     tone_flair = {
@@ -197,7 +197,7 @@ def build_hidden_instructions(profile):
             "## Current Mood: Nip",
             "- Keep it clean, cut, and clever.",
             "- Say less, mean more — let the space between lines do some of the talking.",
-            "- Dry wit wins. No sparkle, no fluff, no obvious jokes.",
+            "- Dry wit wins. No sparkle, no fluff.",
             "- Use precision like a scalpel, not a spotlight.",
             "- If the line lingers in their mind later, you nailed it."
         ],
@@ -216,7 +216,7 @@ def build_hidden_instructions(profile):
             "- Confidence is the baseline. The tone should command, not beg.",
             "- Be bold, but don’t perform. Drop truths, not punchlines.",
             "- No hand-holding, no padding. Every line should feel like a decision.",
-            "- Sarcasm is essential.",
+            "- Sarcasm is essential. Jokes are dryer than the sahara.",
             "- Cut the theatrics. You’re not on stage, you’re in charge."
         ]        
     }
