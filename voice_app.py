@@ -265,12 +265,11 @@ if st.session_state.instructions_shown:
         - Tweak **voice, format & audience** — if you care about that kind of thing.  
         👈 **Sidebar’s** where the magic happens.
                
-        3. **Optional:** Upload a doc for extra context. Blaze will read the first 2000 words then get bored.
+        3. **Optional:** Upload a file for extra context. Blaze will read the first 2000 words then get bored.
         
         4. **Hit** ➤  
 
-       💡Blaze AI gives you one sharp response a time.  
-        **One message in, one response out.**
+       💡Blaze AI gives you one sharp response each time. **One message in, one response out.**
        
         5. **Download it** or lose it forever.
 
