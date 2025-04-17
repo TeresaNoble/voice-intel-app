@@ -253,29 +253,29 @@ if "instructions_shown" not in st.session_state:
 if st.session_state.instructions_shown:
     with st.expander("🧭 Start Here: How It Works"):
         st.markdown("""
-        1. **Type your message idea below.** One shot. One response. So include everything you want.
+        1. **Type your message idea below.**  
         Examples:
         - "An email to my team about the end-of-project deadline on Friday."
-        - "A birthday card message for my dog groomer's aunt, Betty, in Spanish"
-        
+        - "A birthday card message for my dog groomer's aunt, Betty, in Spanish"  
         💡 **Be specific.** Blaze can’t read your mind. *Yet.*
         
         2. **Set the vibe** *(Top left arrow if you’re on mobile)*  
         **Tone Flair = how much of a menace Blaze is allowed to be:**
         - **Nip** (mild), **Slash** (dry + sharp), **Blaze** (send-it-and-pray)
-        - Then tweak voice, format & audience — if you care about that kind of thing.
-        - 👈 **Sidebar’s** where it all happens.
+        - Tweak **voice, format & audience** — if you care about that kind of thing.
+        - 👈 **Sidebar’s** where the magic happens.
                
-        3. **Optional:** Upload a doc for extra context (TXT, PDF, or DOCX) Blaze will read the first 2000 words then get bored.
+        3. **Optional:** Upload a doc for extra context. Blaze will read the first 2000 words then get bored.
         
         4. **Hit** ➤  
-        Blaze AI gives you one sharp response a time. **One message in, one response out.**
+       💡Blaze AI gives you one sharp response a time.  
+        **One message in, one response out.**
        
         5. **Download it** or lose it forever.
 
-        6. **Want a remix?** Tweak the settings and hit ↩️ Reuse Last Prompt.
+        6. **Want a remix?** Tweak the settings and hit ↩️ **Reuse Last Prompt.**
 
-        **TL;DR  
+        #### **TL;DR  
         👈 Set your vibe in the sidebar  
         Type your idea  
         Hit ➤  
