@@ -257,17 +257,18 @@ if st.session_state.instructions_shown:
         Examples:
         - "An email to my team about the end-of-project deadline on Friday."
         - "A birthday card message for my dog groomer's aunt, Betty, in Spanish"  
+        
         💡 **Be specific.** Blaze can’t read your mind. *Yet.*
         
         2. **Set the vibe** *(Top left arrow if you’re on mobile)*  
-        **Tone Flair = how much of a menace Blaze is allowed to be:**
-        - **Nip** (mild), **Slash** (dry + sharp), **Blaze** (send-it-and-pray)
-        - Tweak **voice, format & audience** — if you care about that kind of thing.
-        - 👈 **Sidebar’s** where the magic happens.
+        - **Tone Flair** = how much of a menace Blaze is allowed to be
+        - Tweak **voice, format & audience** — if you care about that kind of thing.  
+        👈 **Sidebar’s** where the magic happens.
                
         3. **Optional:** Upload a doc for extra context. Blaze will read the first 2000 words then get bored.
         
         4. **Hit** ➤  
+
        💡Blaze AI gives you one sharp response a time.  
         **One message in, one response out.**
        
