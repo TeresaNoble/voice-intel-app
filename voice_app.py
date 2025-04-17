@@ -275,8 +275,8 @@ if st.session_state.instructions_shown:
 
         6. **Want a remix?** Tweak the settings and hit ↩️ **Reuse Last Prompt.**
 
-        #### **TL;DR  
-        👈 Set your vibe in the sidebar  
+        #### TL;DR  
+        👈 **Set your vibe in the sidebar  
         Type your idea  
         Hit ➤  
         Download it or lose it  
