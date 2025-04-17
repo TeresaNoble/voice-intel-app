@@ -61,9 +61,8 @@ def get_sidebar_profile():
     )
     reference_text = extract_text_from_file(uploaded_file) if uploaded_file else ""
 
-    """👈 Adjust your message vibe here. Pick your mood. We’ll match your message to it."""
     with st.sidebar:
-        st.header("Define Your Audience and Style of Writing")
+        st.header("Set The Vibe")
 
         # Add tone flair selector
         tone_flair = st.select_slider(
@@ -76,7 +75,7 @@ def get_sidebar_profile():
         ultra_direct = st.toggle(
             "Ultra-Direct Mode",
             value=False,
-            help="Override all personality settings to deliver sharp, efficient content with no tone."
+            help="Override all personality settings to deliver sharp, efficient content with no Blaze tone."
         )
 
        
@@ -164,7 +163,6 @@ def build_hidden_instructions(profile):
             "Blaze Mode — Executive edition.",
             "Tone must be bold, direct, and human. Skip metaphors, branded sign-offs, or dramatic flourishes.",
             "Keep sentences short. Prioritize frictionless clarity with a confident edge.",
-            "Sarcasm is welcome — if it stings, not sings.",
             "No wordplay. No pep talk. This isn’t advertising — it’s communication.",
             "",
             f"Content Format: {VOICE_PROFILE['content_format'][profile['content_format']]}",
@@ -227,7 +225,7 @@ def build_hidden_instructions(profile):
         f"Communication Style: {VOICE_PROFILE['communication_style'][profile['communication_style']]}",
         f"Content Format: {VOICE_PROFILE['content_format'][profile['content_format']]}",
         f"Generation: {VOICE_PROFILE['generation'][profile['generation']]}",
-        f"Length: {VOICE_PROFILE['length'][profile['length']]} - Be concise if short, thorough if long",
+        f"Length: {VOICE_PROFILE['length'][profile['length']]} - Be concise if short, thorough with bullet points if long",
         ref_block
     ]
 
@@ -243,7 +241,7 @@ def build_hidden_instructions(profile):
 st.set_page_config(page_title="Custom Content AI", layout="centered")
 st.title("Blaze AI")
 st.markdown(
-    "Writing with edge, not ego",
+    "Dry. Sarcastic. Maybe even usable.",
     unsafe_allow_html=True
 )
 
@@ -253,36 +251,36 @@ if "instructions_shown" not in st.session_state:
     st.session_state.instructions_shown = True  # Show instructions by default
 
 if st.session_state.instructions_shown:
-    with st.expander("🧭 Start Here: How to Use This Tool"):
+    with st.expander("🧭 Start Here: How It Works"):
         st.markdown("""
-        **✅ How to Use This AI Writing Assistant**
-        This tool helps you write smarter, faster - in your style, for your audience.
-        Step-by-Step:
-        1. Type your full message request below - Blaze gives you *one crafted response*, so include everything you need.
-        Example:
-        - ""An email to my team about the end-of-project deadline on Friday.""
-        - ""A birthday card message for my dog groomer's aunt, Betty, in Spanish""
+        1. **Type your message idea below.** One shot. One response. So include everything you want.
+        Examples:
+        - "An email to my team about the end-of-project deadline on Friday."
+        - "A birthday card message for my dog groomer's aunt, Betty, in Spanish"
         
-        💡 Pro tip: Be specific. The more context you give, the more Blaze can hit the tone you’re after.
+        💡 Be specific. Blaze can’t read your mind. Yet.
         
-        2. Customize how it sounds using the settings in the sidebar:
-        - **Personality Strength (Tone Flair):**
-        Turn up the vibe — from calm (Nip) to bold (Blaze)
-        - **Tone of Voice:**
-        Choose the attitude: Witty, Professional, Bold, etc.
-        - **Audience Style:**
-        Match who you’re writing for — eg Millennials, Gen Z, or Boomers
-        - **Content Format:**
-        Pick the structure — Quick Summary, Step-by-Step, etc.
+        2. **Set the vibe** (Top left arrow if you’re on mobile)
+        **Tone Flair = How much of a menace Blaze is allowed to be:**
+        - Nip (mild), Slash (dry + sharp), Blaze (send-it-and-pray)
+        - Then tweak voice, format & audience — if you care about that kind of thing.
+        - 👈 Sidebar’s where it all happens.
+               
+        3. **Optional:** Upload a doc for extra context (TXT, PDF, or DOCX) Blaze will read the first 2000 words then get bored.
         
-        3. *(Optional)* Upload a reference doc for extra context TXT, PDF, or DOCX — up to 200MB
-        
-        4. **Click the arrow** → to generate your message!
+        4. **Hit** ➤
+        - Blaze AI gives you one sharp response a time. One message in, one response out.
+       
+        5. Download it or lose it forever.
 
-        Blaze AI gives you one sharp take at a time. One message in, one response out. Make it count.
-        Want something different? Adjust the settings and hit ↩️ Reuse Last Prompt.
+        6. Want a remix? Tweak the settings and hit ↩️ Reuse Last Prompt.
 
-        On mobile? Tap the arrow menu (top left) to reveal all your style options.
+        **TL;DR**
+        👈 Set your vibe in the sidebar 
+        Type your idea
+        Hit ➤
+        Download it or lose it
+        Done!
         
         """, unsafe_allow_html=True)
 
@@ -296,7 +294,7 @@ if "last_prompt" not in st.session_state:
 if "last_response" not in st.session_state:
     st.session_state.last_response = ""
 
-if prompt := st.chat_input("What are you writing?"):
+if prompt := st.chat_input("Blaze it: What do you want written?"):
     st.session_state.instructions_shown = False
     st.session_state.last_prompt = prompt
     st.session_state.last_response = ""  # ✅ Clear last response before generating new one
