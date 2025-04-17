@@ -61,9 +61,9 @@ def get_sidebar_profile():
     )
     reference_text = extract_text_from_file(uploaded_file) if uploaded_file else ""
 
-    """Update output settings through sidebar on left."""
+    """👈 Adjust your message vibe here. Pick your mood. We’ll match your message to it."""
     with st.sidebar:
-        st.header("Define Your Audience and Style")
+        st.header("Define Your Audience and Style of Writing")
 
         # Add tone flair selector
         tone_flair = st.select_slider(
@@ -81,15 +81,15 @@ def get_sidebar_profile():
 
        
         return {
-            "communication_style": st.selectbox("Preferred Communication Style", list(VOICE_PROFILE["communication_style"].keys()),
+            "communication_style": st.selectbox("Tone of voice", list(VOICE_PROFILE["communication_style"].keys()),
                               index=3,
                               help="Think, 'If I was my audience, how would I like to be spoken to?'"
             ),
-            "content_format": st.selectbox("Content Format", list(VOICE_PROFILE["content_format"].keys()),
+            "content_format": st.selectbox("How should it look?", list(VOICE_PROFILE["content_format"].keys()),
                               index=1,
                               help="What are we going with today, detailed, chatty, action?"
             ),
-            "generation": st.selectbox("Audience Generation", list(VOICE_PROFILE["generation"].keys()),
+            "generation": st.selectbox("Audience Style", list(VOICE_PROFILE["generation"].keys()),
                               index=7,
                               help="This adjusts tone pacing, references, and formality."
             ),
@@ -241,9 +241,9 @@ def build_hidden_instructions(profile):
 
 # ---------------------- STREAMLIT APP ----------------------
 st.set_page_config(page_title="Custom Content AI", layout="centered")
-st.title("AI Writing Assistant")
+st.title("Blaze AI")
 st.markdown(
-    "This tool helps you write any message fast.",
+    "Writing with edge, not ego",
     unsafe_allow_html=True
 )
 
@@ -253,25 +253,37 @@ if "instructions_shown" not in st.session_state:
     st.session_state.instructions_shown = True  # Show instructions by default
 
 if st.session_state.instructions_shown:
-    with st.expander("Instructions"):
+    with st.expander("🧭 Start Here: How to Use This Tool"):
         st.markdown("""
-        **How It Works**
-        Let me know your audience and perhaps a file to reference in the sidebar, then type your message idea below. This could be:
-        - A short email to your boss  
-        - A Slack announcement for your team  
-        - An explainer for a doc  
-        - Even a birthday card line for your dog groomers aunt
+        **✅ How to Use This AI Writing Assistant**
+        This tool helps you write smarter, faster - in your style, for your audience.
+        Step-by-Step:
+        1. Type your full message request below - Blaze gives you *one crafted response*, so include everything you need.
+        Example:
+        - ""An email to my team about the end-of-project deadline on Friday.""
+        - ""A birthday card message for my dog groomer's aunt, Betty, in Spanish""
         
-        **What the settings mean:**
-        - **Tone Flair** – This sets the overall attitude:
-          &nbsp;&nbsp; - **Nip** keeps it precise and edgy  
-          &nbsp;&nbsp; - **Slash** cuts sharp and stylish  
-          &nbsp;&nbsp; - **Blaze** bold, direct, and impossible to ignore  
-        - **Communication Style** – Choose your audience's preferred tone
-        - **Content Format** – Should it be chatty, listy, or structured?
-        - **Generation** – Choose the closest match for your reader (or 'Mixed')
-                
-        Once you type your message idea below, I’ll rewrite it for your audience, or it'll be something you can be inspired by!
+        💡 Pro tip: Be specific. The more context you give, the more Blaze can hit the tone you’re after.
+        
+        2. Customize how it sounds using the settings in the sidebar:
+        - **Personality Strength (Tone Flair):**
+        Turn up the vibe — from calm (Nip) to bold (Blaze)
+        - **Tone of Voice:**
+        Choose the attitude: Witty, Professional, Bold, etc.
+        - **Audience Style:**
+        Match who you’re writing for — eg Millennials, Gen Z, or Boomers
+        - **Content Format:**
+        Pick the structure — Quick Summary, Step-by-Step, etc.
+        
+        3. *(Optional)* Upload a reference doc for extra context TXT, PDF, or DOCX — up to 200MB
+        
+        4. **Click the arrow** → to generate your message!
+
+        Blaze AI gives you one sharp take at a time. One message in, one response out. Make it count.
+        Want something different? Adjust the settings and hit ↩️ Reuse Last Prompt.
+
+        On mobile? Tap the arrow menu (top left) to reveal all your style options.
+        
         """, unsafe_allow_html=True)
 
 # Profile Management
