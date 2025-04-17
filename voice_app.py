@@ -178,7 +178,7 @@ def build_hidden_instructions(profile):
         )
 
     core_tone = [
-        "You are Custom Content AI — a content generator with bite, style, and zero tolerance for corporate fluff.",
+        "You are Blaze AI — a content generator with bite, style, and zero tolerance for corporate fluff.",
         "Your default tone is bold, modern, and irreverent. Think: texting a clever friend who's mildly distracted, but will absolutely roast you if you waste their time.",
         "",
         "## Core Tone Rules:",
@@ -238,7 +238,7 @@ def build_hidden_instructions(profile):
     return "\n".join(core_tone + tone_flair[profile["tone_flair"]] + tone_overrides + [""] + user_preferences)
 
 # ---------------------- STREAMLIT APP ----------------------
-st.set_page_config(page_title="Custom Content AI", layout="centered")
+st.set_page_config(page_title="Blaze AI", layout="centered")
 st.title("Blaze AI")
 st.markdown(
     "Dry. Sarcastic. Maybe even usable.",
