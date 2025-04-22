@@ -56,7 +56,7 @@ def get_sidebar_profile():
         st.sidebar.warning("Logo not found. Proceeding without it.")
 
     uploaded_file = st.sidebar.file_uploader(
-        "Upload a reference doc. AI is not secure, don't upload secrets or scandals.", 
+        "Upload a doc - this wont change the tone but will give B more context to work with. AI is not secure, don't upload secrets or scandals.", 
         type=["txt", "pdf", "docx"]
     )
     reference_text = extract_text_from_file(uploaded_file) if uploaded_file else ""
