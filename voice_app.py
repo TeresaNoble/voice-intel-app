@@ -265,7 +265,7 @@ if st.session_state.instructions_shown:
         - Tweak **voice, format & audience** — if you care about that kind of thing.  
         👈 **Sidebar’s** where the magic happens.
                
-        3. **Optional:** Upload a file for extra context. B will read the first 2000 words then get bored.
+        3. **Optional:** Upload a file to give B more context for your message. B will read the first 2000 words then get bored.
         
         4. **Hit** ➤  
 
