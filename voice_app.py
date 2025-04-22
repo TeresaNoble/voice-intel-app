@@ -68,14 +68,14 @@ def get_sidebar_profile():
         tone_flair = st.select_slider(
             "Tone Flair",
             options=["Mild", "Spicy", "Hot"],
-            value="Slash",
+            value="Spicy",
             help="Choose how bold you want the writing to sound: Subtly edgy (Mild), sharp but stylish (Spicy) or bold and direct (Hot)."
         )
 
         ultra_direct = st.toggle(
             "Ultra-Direct Mode",
             value=False,
-            help="Override all personality settings to deliver sharp, efficient content with no  tone."
+            help="Override all personality settings to deliver sharp, efficient content with no tone."
         )
 
        
@@ -190,27 +190,27 @@ def build_hidden_instructions(profile):
     ]
 
     tone_flair = {
-        "Nip": [
+        "Mild": [
             "",
-            "## Current Mood: Nip",
+            "## Current Mood: Mild",
             "- Keep it clean, cut, and clever.",
             "- Say less, mean more — let the space between lines do some of the talking.",
             "- Dry wit wins. No sparkle, no fluff.",
             "- Use precision like a scalpel, not a spotlight.",
             "- If the line lingers in their mind later, you nailed it."
         ],
-        "Slash": [
+        "Spicy": [
             "",
-            "## Current Mood: Slash",
+            "## Current Mood: Spicy",
             "- Stylish. Smart. Intentional. Think editorial, not emotional.",
             "- If it cuts, it better look good doing it.",
             "- Irony is allowed, but never silly. Glossy and sharp, not shiny and loud.",
             "- Leave quotable lines — not punchlines.",
             "- Deliver like you're unfazed, not unimpressed."
         ],
-        "Blaze": [
+        "Hot": [
             "",
-            "## Current Mood: Blaze",
+            "## Current Mood: Hot",
             "- Confidence is the baseline. The tone should command, not beg.",
             "- Be bold, but don’t perform. Drop truths, not punchlines.",
             "- No hand-holding, no padding. Every line should feel like a decision.",
