@@ -67,15 +67,15 @@ def get_sidebar_profile():
         # Add tone flair selector
         tone_flair = st.select_slider(
             "Tone Flair",
-            options=["Nip", "Slash", "Blaze"],
+            options=["Mild", "Spicy", "Hot"],
             value="Slash",
-            help="Choose how bold you want the writing to sound: Subtly edgy (Nip), sharp but stylish (Slash) or bold and direct (Blaze)."
+            help="Choose how bold you want the writing to sound: Subtly edgy (Mild), sharp but stylish (Spicy) or bold and direct (Hot)."
         )
 
         ultra_direct = st.toggle(
             "Ultra-Direct Mode",
             value=False,
-            help="Override all personality settings to deliver sharp, efficient content with no Blaze tone."
+            help="Override all personality settings to deliver sharp, efficient content with no  tone."
         )
 
        
@@ -158,9 +158,9 @@ def build_hidden_instructions(profile):
         ]
         return "\n".join(content)
 
-    if profile["tone_flair"] == "Blaze" and profile["communication_style"] in ["Professional", "Direct"]:
+    if profile["tone_flair"] == "" and profile["communication_style"] in ["Professional", "Direct"]:
         content = [
-            "Blaze Mode — Executive edition.",
+            " Mode — Executive edition.",
             "Tone must be bold, direct, and human. Skip metaphors, branded sign-offs, or dramatic flourishes.",
             "Keep sentences short. Prioritize frictionless clarity with a confident edge.",
             "No wordplay. No pep talk. This isn’t advertising — it’s communication.",
@@ -178,7 +178,7 @@ def build_hidden_instructions(profile):
         )
 
     core_tone = [
-        "You are Blaze AI — a content generator with bite, style, and zero tolerance for corporate fluff.",
+        "You are B — a content generator with bite, style, and zero tolerance for corporate fluff.",
         "Your default tone is bold, modern, and irreverent. Think: texting a clever friend who's mildly distracted, but will absolutely roast you if you waste their time.",
         "",
         "## Core Tone Rules:",
@@ -238,10 +238,10 @@ def build_hidden_instructions(profile):
     return "\n".join(core_tone + tone_flair[profile["tone_flair"]] + tone_overrides + [""] + user_preferences)
 
 # ---------------------- STREAMLIT APP ----------------------
-st.set_page_config(page_title="Blaze AI", layout="centered")
-st.title("Blaze AI")
+st.set_page_config(page_title="Ask B", layout="centered")
+st.title("Ask B")
 st.markdown(
-    "Dry. Sarcastic. Maybe even usable.",
+    "Dry. Sarcastic. Maybe even usable - Thanks for being an early tester.",
     unsafe_allow_html=True
 )
 
@@ -258,18 +258,18 @@ if st.session_state.instructions_shown:
         - "An email to my team about the end-of-project deadline on Friday."
         - "A birthday card message for my dog groomer's aunt, Betty, in Spanish"  
         
-        💡 **Be specific.** Blaze can’t read your mind. *Yet.*
+        💡 **Be specific.** B can’t read your mind. *Yet.*
         
         2. **Set the vibe** *(Top left arrow if you’re on mobile)*  
-        - **Tone Flair** = how much of a menace Blaze is allowed to be
+        - **Tone Flair** = how much of a menace B is allowed to be
         - Tweak **voice, format & audience** — if you care about that kind of thing.  
         👈 **Sidebar’s** where the magic happens.
                
-        3. **Optional:** Upload a file for extra context. Blaze will read the first 2000 words then get bored.
+        3. **Optional:** Upload a file for extra context. B will read the first 2000 words then get bored.
         
         4. **Hit** ➤  
 
-       💡Blaze AI gives you one sharp response each time. **One message in, one response out.**
+       💡B gives you one sharp response each time. **One message in, one response out.**
        
         5. **Download it** or lose it forever.
 
@@ -294,7 +294,7 @@ if "last_prompt" not in st.session_state:
 if "last_response" not in st.session_state:
     st.session_state.last_response = ""
 
-if prompt := st.chat_input("Blaze it: What do you want written?"):
+if prompt := st.chat_input("What do you want written?"):
     st.session_state.instructions_shown = False
     st.session_state.last_prompt = prompt
     st.session_state.last_response = ""  # ✅ Clear last response before generating new one
