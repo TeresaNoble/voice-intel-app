@@ -239,7 +239,7 @@ def build_hidden_instructions(profile):
 
 # ---------------------- STREAMLIT APP ----------------------
 st.set_page_config(page_title="Ask B", layout="centered")
-st.title("Ask B")
+st.title("🌶️ Ask B")
 st.markdown(
     "Dry. Sarcastic. Maybe even usable - Thanks for being an early tester.",
     unsafe_allow_html=True
